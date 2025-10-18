@@ -1,12 +1,12 @@
-# \# UdeATunes
+## UdeATunes
 
 # 
 
-# !\[Estado del proyecto](https://img.shields.io/badge/estado-en%20proceso-yellow)
+![Estado del proyecto](https://img.shields.io/badge/estado-en%20proceso-yellow)
 
 # 
 
-# \## Descripción
+### Descripción
 
 # 
 
@@ -18,7 +18,7 @@
 
 # 
 
-# \## Objetivo
+# ## Objetivo
 
 # 
 
