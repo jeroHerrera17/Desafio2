@@ -4,4 +4,10 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
-        main.cpp
+        listafavoritos.cpp \
+        main.cpp \
+        usuario.cpp
+
+HEADERS += \
+    listafavoritos.h \
+    usuario.h
