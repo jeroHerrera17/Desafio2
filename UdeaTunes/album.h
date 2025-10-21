@@ -6,24 +6,26 @@ using namespace std;
 
 class Album {
 private:
-    int codigo;                 // Código único del álbum (ej: 1000101)
-    string nombre;              // Nombre del álbum
-    string genero;              // Género musical
-    string fechaLanzamiento;    // Fecha de lanzamiento
-    float duracionTotal;        // Duración total en minutos
-    string sello;               // Sello disquero
-    string portada;             // Ruta de la imagen PNG
-    int puntuacion;             // Puntuación de 1 a 10
+    int codigo;
+    int idArtista;
+    string nombre;
+    string genero;
+    string fechaLanzamiento;
+    float duracionTotal;
+    string sello;
+    string portada;
+    int puntuacion;
 
 public:
     // Constructores
     Album();
-    Album(int codigo, const string& nombre, const string& genero,
+    Album(int codigo, int idArtista, const string& nombre, const string& genero,
           const string& fechaLanzamiento, float duracionTotal,
           const string& sello, const string& portada, int puntuacion);
 
     // Getters
     int getCodigo() const;
+    int getIdArtista() const;
     string getNombre() const;
     string getGenero() const;
     string getFechaLanzamiento() const;
@@ -32,11 +34,13 @@ public:
     string getPortada() const;
     int getPuntuacion() const;
 
-    // Mostrar información
+    // Métodos de visualización
     void mostrarInfo() const;
-
-    // Cargar y mostrar solo álbumes de un artista
+    void mostrarResumen() const;
     static void cargarPorArtista(const string& rutaArchivo, int idArtistaBuscado);
+
+    // Nuevo: Cargar todos los álbumes en memoria
+    static Album* cargarTodos(const string& rutaArchivo, int& cantidad);
 };
 
 #endif

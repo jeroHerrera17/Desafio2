@@ -16,7 +16,8 @@ private:
 public:
     // Constructores
     Artista();
-    Artista(int codigo, const string& nombre, int edad, const string& pais, int seguidores, int posicion);
+    Artista(int codigo, const string& nombre, int edad, const string& pais,
+            int seguidores, int posicion);
 
     // Getters
     int getCodigo() const;
@@ -34,14 +35,16 @@ public:
     void setSeguidores(int seguidores);
     void setPosicion(int posicion);
 
-    // Mostrar información individual
+    // Métodos de visualización
     void mostrarInfo() const;
+    void mostrarResumen() const; // Nueva función para mostrar en lista
 
-    // Cargar un artista por código
+    // Métodos de archivo
     bool cargarDesdeArchivo(const string& rutaArchivo, int codigoBuscado);
+    static void mostrarTodos(const string& rutaArchivo);
 
-    // 🔹 Mostrar todos los artistas del archivo
-    void mostrarTodos(const string& rutaArchivo);
+    // Nuevo: Cargar todos los artistas en un array dinámico
+    static Artista* cargarTodos(const string& rutaArchivo, int& cantidad);
 };
 
 #endif

@@ -9,8 +9,10 @@ using namespace std;
 // ============================
 Artista::Artista() : codigo(0), edad(0), seguidores(0), posicion(0) {}
 
-Artista::Artista(int codigo, const string& nombre, int edad, const string& pais, int seguidores, int posicion)
-    : codigo(codigo), nombre(nombre), edad(edad), pais(pais), seguidores(seguidores), posicion(posicion) {}
+Artista::Artista(int codigo, const string& nombre, int edad, const string& pais,
+                 int seguidores, int posicion)
+    : codigo(codigo), nombre(nombre), edad(edad), pais(pais),
+    seguidores(seguidores), posicion(posicion) {}
 
 // ============================
 // Getters
@@ -33,7 +35,7 @@ void Artista::setSeguidores(int seguidores) { this->seguidores = seguidores; }
 void Artista::setPosicion(int posicion) { this->posicion = posicion; }
 
 // ============================
-// Mostrar información
+// Mostrar información completa
 // ============================
 void Artista::mostrarInfo() const {
     cout << "---------------------------------------\n";
@@ -44,6 +46,14 @@ void Artista::mostrarInfo() const {
     cout << "Seguidores: " << seguidores << endl;
     cout << "Posicion: " << posicion << endl;
     cout << "---------------------------------------\n";
+}
+
+// ============================
+// Mostrar resumen en lista
+// ============================
+void Artista::mostrarResumen() const {
+    cout << "[" << codigo << "] " << nombre << " (" << pais
+         << "), Seguidores: " << seguidores << endl;
 }
 
 // ============================
@@ -76,7 +86,6 @@ bool Artista::cargarDesdeArchivo(const string& rutaArchivo, int codigoBuscado) {
             pais = paisStr;
             seguidores = stoi(seguidoresStr);
             posicion = stoi(posicionStr);
-
             file.close();
             return true;
         }
@@ -109,9 +118,69 @@ void Artista::mostrarTodos(const string& rutaArchivo) {
         getline(ss, seguidoresStr, ',');
         getline(ss, posicionStr, ',');
 
-        cout << "[" << codigoStr << "] " << nombreStr << " (" << paisStr << "), Seguidores: " << seguidoresStr << endl;
+        cout << "[" << codigoStr << "] " << nombreStr << " (" << paisStr
+             << "), Seguidores: " << seguidoresStr << endl;
     }
     cout << "=======================================\n";
+    file.close();
+}
+
+// ============================
+// NUEVO: Cargar todos los artistas en memoria
+// ============================
+Artista* Artista::cargarTodos(const string& rutaArchivo, int& cantidad) {
+    ifstream file(rutaArchivo);
+    if (!file.is_open()) {
+        cerr << "Error: no se pudo abrir el archivo " << rutaArchivo << endl;
+        cantidad = 0;
+        return nullptr;
+    }
+
+    // Primera pasada: contar artistas
+    cantidad = 0;
+    string linea;
+    while (getline(file, linea)) {
+        if (!linea.empty()) cantidad++;
+    }
+
+    if (cantidad == 0) {
+        file.close();
+        return nullptr;
+    }
+
+    // Crear array dinámico
+    Artista* artistas = new Artista[cantidad];
+
+    // Segunda pasada: cargar datos
+    file.clear();
+    file.seekg(0);
+    int i = 0;
+
+    while (getline(file, linea) && i < cantidad) {
+        stringstream ss(linea);
+        string codigoStr, nombreStr, edadStr, paisStr, seguidoresStr, posicionStr;
+
+        getline(ss, codigoStr, ',');
+        getline(ss, nombreStr, ',');
+        getline(ss, edadStr, ',');
+        getline(ss, paisStr, ',');
+        getline(ss, seguidoresStr, ',');
+        getline(ss, posicionStr, ',');
+
+        try {
+            artistas[i].setCodigo(stoi(codigoStr));
+            artistas[i].setNombre(nombreStr);
+            artistas[i].setEdad(stoi(edadStr));
+            artistas[i].setPais(paisStr);
+            artistas[i].setSeguidores(stoi(seguidoresStr));
+            artistas[i].setPosicion(stoi(posicionStr));
+            i++;
+        } catch (...) {
+            cerr << "Advertencia: error al parsear línea: " << linea << endl;
+        }
+    }
 
     file.close();
+    cantidad = i; // Actualizar con la cantidad real cargada
+    return artistas;
 }

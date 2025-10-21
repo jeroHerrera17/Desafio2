@@ -2,27 +2,39 @@
 #define CANCION_H
 
 #include <string>
+#include "creditos.h"
 using namespace std;
 
 class Cancion {
 private:
-    int id;
-    int idAlbum;
+    int idAlbum;           // Primeros 7 dígitos del ID completo
     string nombre;
-    string duracion;
     string rutaAudio128;
     string rutaAudio320;
-    string creditos;
-    int reproducciones;
+    int duracion;          // En segundos
+    Creditos creditos;
 
 public:
+    // Constructores
     Cancion();
-    Cancion(int id, int idAlbum, const string& nombre, const string& duracion,
-            const string& rutaAudio128, const string& rutaAudio320,
-            const string& creditos, int reproducciones);
+    Cancion(int idAlbum, const string& nombre, const string& rutaAudio128,
+            const string& rutaAudio320, int duracion, const Creditos& creditos);
 
+    // Métodos
     void mostrarInfo() const;
-    void cargarPorAlbum(const string& rutaArchivo, int idAlbumBuscado);
+    void mostrarResumen() const;
+    static void cargarPorAlbum(const string& rutaArchivo, int idAlbumBuscado);
+
+    // IMPORTANTE: Cargar todas las canciones en memoria
+    static Cancion* cargarTodas(const string& rutaArchivo, int& cantidad);
+
+    // Getters
+    int getIdAlbum() const { return idAlbum; }
+    string getNombre() const { return nombre; }
+    int getDuracion() const { return duracion; }
 };
+
+// Función auxiliar para parsear créditos
+Creditos parsearCreditos(const string& texto);
 
 #endif
