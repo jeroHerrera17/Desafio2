@@ -1,7 +1,8 @@
 #include "usuario.h"
+#include "listafavoritos.h"
 #include <string>
 
-Usuario::Usuario(string _nickname,string _password,string _ciudad,string _pais,string _fechaRegistro,int _membresia,int _contadorPublicidad){
+Usuario::Usuario(string _nickname,string _password,string _ciudad,string _pais,string _fechaRegistro,bool _membresia,int _contadorPublicidad){
     nickname = _nickname;
     password = _password;
     ciudad = _ciudad;
@@ -9,25 +10,29 @@ Usuario::Usuario(string _nickname,string _password,string _ciudad,string _pais,s
     fechaRegistro = _fechaRegistro;
     membresia = _membresia;
     contadorPublicidad = _contadorPublicidad;
+    listaFavoritos::listaFavoritos
 }
 
-Usuario::ejecutarFavoritos(){
+Usuario::Usuario(string _nickname,string _password,string _ciudad,string _pais,string _fechaRegistro,bool _membresia,int _contadorPublicidad, listaFavoritos _MiLista){
 
 }
 
 void Usuario::setNickname(const string& n) { nickname = n; }
-void Usuario::setMembresia(int m) { membresia = m; }
+void Usuario::setMembresia(bool m) { membresia = m; }
 void Usuario::setCiudad(const string& c) { ciudad = c; }
 void Usuario::setPais(const string& p) { pais = p; }
 void Usuario::setFecha(const string& f) { fechaRegistro = f; }
-void Usuario::setClave(const string& c) { password = c; }
+void Usuario::setPassword(const string& c) { password = c; }
+void Usuario::setListaFavoritos(listaFavoritos ML) {MiLista = ML; }
+void Usuario::setContadorPublicidad(int CP) {contadorPublicidad = CP; }
 
 string Usuario::getNickname()  { return nickname; }
-int Usuario::getMembresia()  { return membresia; }
+bool Usuario::getMembresia()  { return membresia; }
 string Usuario::getCiudad()  { return ciudad; }
 string Usuario::getPais()  { return pais; }
 string Usuario::getFecha()  { return fechaRegistro; }
 string Usuario::getPassword()  { return password; }
+listaFavoritos Usuario::getListaFavoritos()  { return listaFavoritos; }
 
 void Usuario::mostrarInfo() {
     cout << "Usuario: " << nickname << endl;
