@@ -8,10 +8,11 @@ using namespace std;
 class Usuario
 {
 public:
-    Usuario(string,string,string,string,string,bool,int,listaFavoritos);
-    Usuario(string,string,string,string,string,bool,int);
-    void agregarListaFavorito();
-    void seguirListaFavorito();
+    //CONSTRUCTORES
+    Usuario(string,string,string,string,string,bool,int, listaFavoritos);
+    Usuario();
+    //void agregarListaFavorito();
+    //void seguirListaFavorito();
 
     //setters
     void setNickname(const string& n);
@@ -20,7 +21,7 @@ public:
     void setPais(const string& p);
     void setFecha(const string& f);
     void setPassword(const string& c);
-    void setListaFavoritos(listaFavoritos ML);
+    void setListaFavoritos(const string& n, string* l, int nC);
     void setContadorPublicidad(int CP);
 
     //getters
@@ -30,9 +31,13 @@ public:
     string getPais();
     string getFecha();
     string getPassword();
-    listaFavoritos getListaFavoritos();
+    //listaFavoritos getListaFavoritos();
 
     void mostrarInfo();
+
+    //para la creacion de los arreglos dinamicos
+    //int contarUsuarios(const string& rutaArchivo);
+    static Usuario* cargarUsuarios(const string& rutaArchivoU, const string& rutaArchivoLF, int& cantidad);
 
 private:
     string nickname;

@@ -3,27 +3,33 @@
 
 #include <iostream>
 #include <string>
+#include <cancion.h>
+
 using namespace std;
 
 class listaFavoritos
 {
 public:
+    listaFavoritos(string,string* ,int);
     listaFavoritos();
+    ~listaFavoritos();
+
+
     void agregarCancion();
     void eliminarCancion();
 
     //setters
-    void setLista(cancion L);
+    void setLista(Cancion L);
     void setnombreDueño(const string& D);
     void setNumeroCanciones(int NC);
     //getters
-    cancion getCancion(cancion l[10000]);
+    Cancion getCancion(Cancion l[10000]);
     string getNombreDueño(string ND);
     int getNumeroCanciones(int NC);
 
 private:
     string nombreDueño;
-    cancion lista[10000];
+    string* lista;
     int numeroCanciones;
 };
 
