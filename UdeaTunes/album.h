@@ -2,6 +2,7 @@
 #define ALBUM_H
 
 #include <string>
+#include "cancion.h"
 using namespace std;
 
 class Album {
@@ -17,13 +18,13 @@ private:
     int puntuacion;
 
 public:
-    // Constructores
     Album();
     Album(int codigo, int idArtista, const string& nombre, const string& genero,
           const string& fechaLanzamiento, float duracionTotal,
           const string& sello, const string& portada, int puntuacion);
 
     // Getters
+    // album.h
     int getCodigo() const;
     int getIdArtista() const;
     string getNombre() const;
@@ -34,12 +35,15 @@ public:
     string getPortada() const;
     int getPuntuacion() const;
 
-    // Métodos de visualización
+
+    // Funciones principales
     void mostrarInfo() const;
     void mostrarResumen() const;
-    static void cargarPorArtista(const string& rutaArchivo, int idArtistaBuscado);
 
-    // Nuevo: Cargar todos los álbumes en memoria
+    void reproducirAleatorio(Cancion* canciones, int totalCanciones, int codigoAlbum);
+
+    // Métodos estáticos
+    static void cargarPorArtista(const string& rutaArchivo, int idArtistaBuscado);
     static Album* cargarTodos(const string& rutaArchivo, int& cantidad);
 };
 

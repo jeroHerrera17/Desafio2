@@ -32,6 +32,7 @@ public:
     int getIdAlbum() const { return idAlbum; }
     string getNombre() const { return nombre; }
     int getDuracion() const { return duracion; }
+    void reproducir() const;
 };
 
 // Función auxiliar para parsear créditos

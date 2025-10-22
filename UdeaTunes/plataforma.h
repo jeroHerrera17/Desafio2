@@ -2,9 +2,11 @@
 #define PLATAFORMA_H
 
 #include <string>
+
 #include "artista.h"
 #include "album.h"
 #include "cancion.h"
+
 using namespace std;
 
 class Plataforma {
@@ -17,7 +19,7 @@ private:
     int cantArtistas;
     int cantAlbumes;
     int cantCanciones;
-
+    MedicionRecursos medicionRecursos;
     // Métodos privados auxiliares
     void limpiarPantalla();
     void pausar();

@@ -19,7 +19,7 @@ Cancion::Cancion(int idAlbum, const string& nombre, const string& rutaAudio128,
 // Mostrar información
 // ----------------------------
 void Cancion::mostrarInfo() const {
-    cout << "\n🎵 " << nombre << "\n";
+    cout << "\n " << nombre << "\n";
     cout << "\tID Album: " << idAlbum << "\n";
     cout << "\tDuracion: " << duracion << " segundos\n";
     cout << "\tAudio 128 kbps: " << rutaAudio128 << "\n";
@@ -32,7 +32,7 @@ void Cancion::mostrarInfo() const {
 // Mostrar resumen
 // ----------------------------
 void Cancion::mostrarResumen() const {
-    cout << "🎵 " << nombre << " (" << duracion << "s)\n";
+    cout << " " << nombre << " (" << duracion << "s)\n"<<rutaAudio128;
 }
 
 // ----------------------------
@@ -94,7 +94,7 @@ Creditos parsearCreditos(const string& texto) {
 void Cancion::cargarPorAlbum(const string& rutaArchivo, int idAlbumBuscado) {
     ifstream file(rutaArchivo);
     if (!file.is_open()) {
-        cerr << "Error: no se pudo abrir el archivo de canciones.\n";
+        cerr << "Error: no se pudo abrir el archivo " << rutaArchivo << endl;
         return;
     }
 
@@ -107,7 +107,7 @@ void Cancion::cargarPorAlbum(const string& rutaArchivo, int idAlbumBuscado) {
 
         size_t posParentesis = linea.find_last_of('(');
         if (posParentesis == string::npos) {
-            cerr << "Advertencia: formato inválido (sin créditos) -> " << linea << endl;
+            cerr << "Formato incorrecto: no se encuentran creditos en la línea:\n" << linea << endl;
             continue;
         }
 
@@ -115,28 +115,32 @@ void Cancion::cargarPorAlbum(const string& rutaArchivo, int idAlbumBuscado) {
         string creditosTxt = linea.substr(posParentesis);
 
         stringstream ss(parteAntes);
-        string temp;
+        string idCompletoStr;
         int idAlbum, duracion;
         string nombre, ruta128, ruta320;
 
         try {
-            getline(ss, temp, ',');
-            if (temp.empty()) throw "ID de álbum vacío";
-            idAlbum = stoi(temp);
+            getline(ss, idCompletoStr, ',');
+            if (idCompletoStr.empty()) throw "ID de canción vacío";
+
+            string albumIdStr = idCompletoStr.substr(0, 7);
+            idAlbum = stoi(albumIdStr);
 
             getline(ss, nombre, ',');
             getline(ss, ruta128, ',');
             getline(ss, ruta320, ',');
-            getline(ss, temp, ',');
-            if (temp.empty()) throw "Duración vacía";
-            duracion = stoi(temp);
+
+            string duracionStr;
+            getline(ss, duracionStr, ',');
+            if (duracionStr.empty()) throw "Duración vacía";
+            duracion = stoi(duracionStr);
         }
         catch (const char* msg) {
-            cerr << "Advertencia: formato inválido -> " << linea << "\n Motivo: " << msg << endl;
+            cerr << "Error al parsear línea: " << msg << endl;
             continue;
         }
         catch (...) {
-            cerr << "Advertencia: error desconocido -> " << linea << endl;
+            cerr << "Error desconocido al parsear línea." << endl;
             continue;
         }
 
@@ -229,4 +233,8 @@ Cancion* Cancion::cargarTodas(const string& rutaArchivo, int& cantidad) {
     file.close();
     cantidad = i;
     return canciones;
+}
+void Cancion::reproducir() const {
+    cout << "Reproduciendo: " << nombre
+         << " (" << duracion << "s)" << endl;
 }

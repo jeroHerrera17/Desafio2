@@ -2,20 +2,59 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-using namespace std;
+#include <thread>
+#include <chrono>
+#include <cstdlib>
+#include <ctime>
 
-// ----------------------------
-// Función auxiliar para limpiar espacios
-// ----------------------------
-static void trimString(string& s) {
-    if (s.empty()) return;
-    size_t inicio = s.find_first_not_of(" \t");
-    size_t fin = s.find_last_not_of(" \t");
-    if (inicio == string::npos || fin == string::npos) {
-        s.clear();
-    } else {
-        s = s.substr(inicio, fin - inicio + 1);
+using namespace std;
+void Album::reproducirAleatorio(Cancion* canciones, int totalCanciones, int codigoAlbum) {
+    cout << "\n=============================\n";
+    cout << "  REPRODUCCION ALEATORIA\n";
+    cout << "=============================\n";
+    cout << "Album: " << nombre << "\n";
+    cout << "Genero: " << genero << "\n";
+    cout << "-----------------------------\n";
+
+    // Convertir el codigo del album a string para comparar prefijos
+    string codigoAlbumStr = to_string(codigoAlbum);
+
+    // Guardar los indices de las canciones que pertenecen al album
+    int* indices = new int[totalCanciones];
+    int conteo = 0;
+    for (int i = 0; i < totalCanciones; i++) {
+        string idCancionStr = to_string(canciones[i].getIdAlbum());
+        if (idCancionStr.substr(0, 7) == codigoAlbumStr) {
+            indices[conteo++] = i;
+        }
     }
+
+    if (conteo == 0) {
+        cout << "No hay canciones para reproducir.\n";
+        delete[] indices;
+        return;
+    }
+
+
+    srand(time(nullptr));
+    for (int i = conteo - 1; i > 0; i--) {
+        int j = rand() % (i + 1);
+        int temp = indices[i];
+        indices[i] = indices[j];
+        indices[j] = temp;
+    }
+
+    // Reproduccion simulada usando los indices mezclados
+    for (int i = 0; i < conteo; i++) {
+        Cancion& cancion = canciones[indices[i]];
+        cout << "\nReproduciendo (" << i + 1 << "/" << conteo << "):\n";
+        cancion.mostrarResumen();
+        this_thread::sleep_for(chrono::seconds(3));
+    }
+
+    cout << "\n--- Fin del album aleatorio ---\n";
+
+    delete[] indices;
 }
 
 // ----------------------------
@@ -31,7 +70,7 @@ Album::Album(int codigo, int idArtista, const string& nombre, const string& gene
     sello(sello), portada(portada), puntuacion(puntuacion) {}
 
 // ----------------------------
-// Métodos get
+// Getters
 // ----------------------------
 int Album::getCodigo() const { return codigo; }
 int Album::getIdArtista() const { return idArtista; }
@@ -42,6 +81,15 @@ float Album::getDuracionTotal() const { return duracionTotal; }
 string Album::getSello() const { return sello; }
 string Album::getPortada() const { return portada; }
 int Album::getPuntuacion() const { return puntuacion; }
+static void trimString(string& str) {
+    size_t start = str.find_first_not_of(" \t\r\n");
+    size_t end = str.find_last_not_of(" \t\r\n");
+    if (start == string::npos || end == string::npos) {
+        str.clear();
+    } else {
+        str = str.substr(start, end - start + 1);
+    }
+}
 
 // ----------------------------
 // Mostrar información
@@ -82,42 +130,37 @@ void Album::cargarPorArtista(const string& rutaArchivo, int idArtistaBuscado) {
         if (linea.empty()) continue;
 
         stringstream ss(linea);
-        string campo1, campo2, campo3, campo4, campo5, campo6, campo7, campo8, campo9;
+        string c1, c2, c3, c4, c5, c6, c7, c8, c9;
 
-        if (!getline(ss, campo1, ',')) continue;
-        if (!getline(ss, campo2, ',')) continue;
-        if (!getline(ss, campo3, ',')) continue;
-        if (!getline(ss, campo4, ',')) continue;
-        if (!getline(ss, campo5, ',')) continue;
-        if (!getline(ss, campo6, ',')) continue;
-        if (!getline(ss, campo7, ',')) continue;
-        if (!getline(ss, campo8, ',')) continue;
-        if (!getline(ss, campo9, ',')) continue;
+        if (!getline(ss, c1, ',')) continue;
+        if (!getline(ss, c2, ',')) continue;
+        if (!getline(ss, c3, ',')) continue;
+        if (!getline(ss, c4, ',')) continue;
+        if (!getline(ss, c5, ',')) continue;
+        if (!getline(ss, c6, ',')) continue;
+        if (!getline(ss, c7, ',')) continue;
+        if (!getline(ss, c8, ',')) continue;
+        if (!getline(ss, c9, ',')) continue;
 
-        trimString(campo1);
-        trimString(campo2);
-        trimString(campo3);
-        trimString(campo4);
-        trimString(campo5);
-        trimString(campo6);
-        trimString(campo7);
-        trimString(campo8);
-        trimString(campo9);
+        trimString(c1); trimString(c2); trimString(c3); trimString(c4);
+        trimString(c5); trimString(c6); trimString(c7); trimString(c8); trimString(c9);
 
-        int codigoNum = 0, idArtista = 0;
+        int idArtista = 0;
         try {
-            codigoNum = stoi(campo1);
-            idArtista = stoi(campo2);
+            idArtista = stoi(c2);
         } catch (...) {
-            cerr << "Advertencia: línea inválida -> " << linea << endl;
             continue;
         }
 
         if (idArtista == idArtistaBuscado) {
-            cout << campo1 << "," << campo3 << "," << campo4 << "," << campo5 << ","
-                 << campo6 << "," << campo7 << "," << campo8 << "," << campo9 << endl;
+            cout << c1 << "," << c3 << "," << c4 << "," << c5 << ","
+                 << c6 << "," << c7 << "," << c8 << "," << c9 << endl;
             encontrado = true;
         }
+
+        // Contador de iteraciones
+        //medicionRecursos.agregarIteraciones();
+        //medicionRecursos.agregarIteraciones();
     }
 
     if (!encontrado) {
@@ -138,7 +181,6 @@ Album* Album::cargarTodos(const string& rutaArchivo, int& cantidad) {
         return nullptr;
     }
 
-    // Primera pasada: contar álbumes
     cantidad = 0;
     string linea;
     while (getline(file, linea)) {
@@ -150,10 +192,8 @@ Album* Album::cargarTodos(const string& rutaArchivo, int& cantidad) {
         return nullptr;
     }
 
-    // Crear array dinámico
     Album* albumes = new Album[cantidad];
 
-    // Segunda pasada: cargar datos
     file.clear();
     file.seekg(0);
     int i = 0;
@@ -174,32 +214,29 @@ Album* Album::cargarTodos(const string& rutaArchivo, int& cantidad) {
         if (!getline(ss, c8, ',')) continue;
         if (!getline(ss, c9, ',')) continue;
 
-        trimString(c1);
-        trimString(c2);
-        trimString(c3);
-        trimString(c4);
-        trimString(c5);
-        trimString(c6);
-        trimString(c7);
-        trimString(c8);
-        trimString(c9);
+        trimString(c1); trimString(c2); trimString(c3); trimString(c4);
+        trimString(c5); trimString(c6); trimString(c7); trimString(c8); trimString(c9);
 
         try {
             albumes[i] = Album(
-                stoi(c1),           // codigo
-                stoi(c2),           // idArtista
-                c3,                 // nombre
-                c4,                 // genero
-                c5,                 // fechaLanzamiento
-                stof(c6),           // duracionTotal
-                c7,                 // sello
-                c8,                 // portada
-                stoi(c9)            // puntuacion
+                stoi(c1),
+                stoi(c2),
+                c3,
+                c4,
+                c5,
+                stof(c6),
+                c7,
+                c8,
+                stoi(c9)
                 );
             i++;
         } catch (...) {
-            cerr << "Advertencia: error al parsear línea: " << linea << endl;
+            continue;
         }
+
+        // Contador de iteraciones
+        //medicionRecursos.agregarIteraciones();
+        //medicionRecursos.agregarIteraciones();
     }
 
     file.close();
