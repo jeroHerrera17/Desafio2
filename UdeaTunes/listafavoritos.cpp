@@ -1,20 +1,55 @@
 #include "listafavoritos.h"
 
-listaFavoritos::listaFavoritos(string _nombreDueño,string* _lista, int _numeroCanciones) {
+listaFavoritos::listaFavoritos(string _nombreDueño, string* _lista, int _numeroCanciones) {
     nombreDueño = _nombreDueño;
-    lista = new string[_numeroCanciones];
-    for(int i = 0; i < _numeroCanciones; i++){
-        lista[i] = _lista[i];
+    numeroCanciones = _numeroCanciones;
+    if (_numeroCanciones > 0 && _lista != nullptr) {
+        lista = new string[_numeroCanciones];
+        for (int i = 0; i < _numeroCanciones; i++)
+            lista[i] = _lista[i];
+    } else {
+        lista = nullptr;
     }
-    numeroCanciones  = _numeroCanciones;
-
-    //void listaFavoritos::setLista(int L
 }
 
-listaFavoritos::listaFavoritos(){
+listaFavoritos::listaFavoritos() {
     nombreDueño = "";
     lista = nullptr;
     numeroCanciones = 0;
 }
-void listaFavoritos::setNumeroCanciones(int NM) {numeroCanciones = NM; }
-void listaFavoritos::setnombreDueño(const string& ND) {nombreDueño = ND; }
+
+listaFavoritos::~listaFavoritos() {
+    delete[] lista;
+}
+
+void listaFavoritos::setLista(string* _lista, int _numeroCanciones) {
+    delete[] lista;
+    numeroCanciones = _numeroCanciones;
+    if (_numeroCanciones > 0 && _lista != nullptr) {
+        lista = new string[_numeroCanciones];
+        for (int i = 0; i < _numeroCanciones; i++)
+            lista[i] = _lista[i];
+    } else {
+        lista = nullptr;
+    }
+}
+
+void listaFavoritos::setNombreDueño(const string& ND) {
+    nombreDueño = ND;
+}
+
+void listaFavoritos::setNumeroCanciones(int NC) {
+    numeroCanciones = NC;
+}
+
+string* listaFavoritos::getLista() const {
+    return lista;
+}
+
+string listaFavoritos::getNombreDueño() const {
+    return nombreDueño;
+}
+
+int listaFavoritos::getNumeroCanciones() const {
+    return numeroCanciones;
+}

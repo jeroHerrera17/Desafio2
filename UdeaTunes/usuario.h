@@ -1,18 +1,17 @@
 #ifndef USUARIO_H
 #define USUARIO_H
 
-#include <listafavoritos.h>
+#include "listafavoritos.h"  // ✅CORREGIDO: usa comillas en lugar de brackets
 #include <iostream>
 #include <string>
 using namespace std;
+
 class Usuario
 {
 public:
     //CONSTRUCTORES
     Usuario(string,string,string,string,string,bool,int, listaFavoritos);
     Usuario();
-    //void agregarListaFavorito();
-    //void seguirListaFavorito();
 
     //setters
     void setNickname(const string& n);
@@ -25,18 +24,17 @@ public:
     void setContadorPublicidad(int CP);
 
     //getters
-    string getNickname() ;
-    bool getMembresia();
-    string getCiudad();
-    string getPais();
-    string getFecha();
-    string getPassword();
-    //listaFavoritos getListaFavoritos();
+    string getNickname() const;
+    bool getMembresia() const;
+    string getCiudad() const;
+    string getPais() const;
+    string getFecha() const;
+    string getPassword() const;
+    listaFavoritos getListaFavoritos() const;
 
     void mostrarInfo();
 
     //para la creacion de los arreglos dinamicos
-    //int contarUsuarios(const string& rutaArchivo);
     static Usuario* cargarUsuarios(const string& rutaArchivoU, const string& rutaArchivoLF, int& cantidad);
 
 private:

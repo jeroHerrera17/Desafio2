@@ -1,8 +1,13 @@
-TEMPLATE = app
-CONFIG += console c++17
-CONFIG -= app_bundle
-CONFIG -= qt
 
+QT -= gui
+
+CONFIG += c++11 console
+CONFIG -= app_bundle
+
+# Definiciones adicionales
+DEFINES += QT_DEPRECATED_WARNINGS
+
+# Archivos fuente (.cpp)
 SOURCES += \
     main.cpp \
     album.cpp \
@@ -10,12 +15,17 @@ SOURCES += \
     cancion.cpp \
     plataforma.cpp \
     listafavoritos.cpp \
-    usuario.cpp
+    creditos.cpp \
+    usuario.cpp \
+    publicidad.cpp
 
+# Archivos de cabecera (.h)
 HEADERS += \
     album.h \
     artista.h \
     cancion.h \
     plataforma.h \
     listafavoritos.h \
-    usuario.h
+    creditos.h \
+    usuario.h \
+    publicidad.h

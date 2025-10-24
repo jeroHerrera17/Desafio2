@@ -1,31 +1,27 @@
 #ifndef LISTAFAVORITOS_H
 #define LISTAFAVORITOS_H
 
-#include <iostream>
 #include <string>
-#include <cancion.h>
 
 using namespace std;
 
 class listaFavoritos
 {
 public:
-    listaFavoritos(string,string* ,int);
+    // Constructores y destructor
+    listaFavoritos(string _nombreDueño, string* _lista, int _numeroCanciones);
     listaFavoritos();
     ~listaFavoritos();
 
-
-    void agregarCancion();
-    void eliminarCancion();
-
-    //setters
-    void setLista(Cancion L);
-    void setnombreDueño(const string& D);
+    // Setters
+    void setLista(string* _lista, int _numeroCanciones);
+    void setNombreDueño(const string& ND);
     void setNumeroCanciones(int NC);
-    //getters
-    Cancion getCancion(Cancion l[10000]);
-    string getNombreDueño(string ND);
-    int getNumeroCanciones(int NC);
+
+    // Getters
+    string* getLista() const;
+    string getNombreDueño() const;
+    int getNumeroCanciones() const;
 
 private:
     string nombreDueño;

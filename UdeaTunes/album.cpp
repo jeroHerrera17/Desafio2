@@ -8,6 +8,18 @@
 #include <ctime>
 
 using namespace std;
+
+// Función auxiliar para limpiar espacios (ahora SIN static)
+void trimString(string& str) {
+    size_t start = str.find_first_not_of(" \t\r\n");
+    size_t end = str.find_last_not_of(" \t\r\n");
+    if (start == string::npos || end == string::npos) {
+        str.clear();
+    } else {
+        str = str.substr(start, end - start + 1);
+    }
+}
+
 void Album::reproducirAleatorio(Cancion* canciones, int totalCanciones, int codigoAlbum) {
     cout << "\n=============================\n";
     cout << "  REPRODUCCION ALEATORIA\n";
@@ -34,7 +46,6 @@ void Album::reproducirAleatorio(Cancion* canciones, int totalCanciones, int codi
         delete[] indices;
         return;
     }
-
 
     srand(time(nullptr));
     for (int i = conteo - 1; i > 0; i--) {
@@ -81,15 +92,6 @@ float Album::getDuracionTotal() const { return duracionTotal; }
 string Album::getSello() const { return sello; }
 string Album::getPortada() const { return portada; }
 int Album::getPuntuacion() const { return puntuacion; }
-static void trimString(string& str) {
-    size_t start = str.find_first_not_of(" \t\r\n");
-    size_t end = str.find_last_not_of(" \t\r\n");
-    if (start == string::npos || end == string::npos) {
-        str.clear();
-    } else {
-        str = str.substr(start, end - start + 1);
-    }
-}
 
 // ----------------------------
 // Mostrar información
@@ -157,10 +159,6 @@ void Album::cargarPorArtista(const string& rutaArchivo, int idArtistaBuscado) {
                  << c6 << "," << c7 << "," << c8 << "," << c9 << endl;
             encontrado = true;
         }
-
-        // Contador de iteraciones
-        //medicionRecursos.agregarIteraciones();
-        //medicionRecursos.agregarIteraciones();
     }
 
     if (!encontrado) {
@@ -233,10 +231,6 @@ Album* Album::cargarTodos(const string& rutaArchivo, int& cantidad) {
         } catch (...) {
             continue;
         }
-
-        // Contador de iteraciones
-        //medicionRecursos.agregarIteraciones();
-        //medicionRecursos.agregarIteraciones();
     }
 
     file.close();

@@ -71,7 +71,7 @@ bool Plataforma::iniciarSesion(const string& archivo, const string& nickname,
             usuario.setCiudad(ciudad);
             usuario.setPais(pais);
             usuario.setFecha(fecha);
-            usuario.setClave(claveArchivo);
+            usuario.setPassword(claveArchivo);
             file.close();
             return true;
         }

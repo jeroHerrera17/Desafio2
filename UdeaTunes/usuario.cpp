@@ -6,7 +6,9 @@
 #include <sstream>
 
 using namespace std;
-Usuario::Usuario(string _nickname,string _password,string _ciudad,string _pais,string _fechaRegistro,bool _membresia,int _contadorPublicidad, listaFavoritos _MiLista){
+
+Usuario::Usuario(string _nickname, string _password, string _ciudad, string _pais,
+                 string _fechaRegistro, bool _membresia, int _contadorPublicidad, listaFavoritos _MiLista) {
     nickname = _nickname;
     password = _password;
     ciudad = _ciudad;
@@ -14,39 +16,50 @@ Usuario::Usuario(string _nickname,string _password,string _ciudad,string _pais,s
     fechaRegistro = _fechaRegistro;
     membresia = _membresia;
     contadorPublicidad = _contadorPublicidad;
-    if(_membresia == false) {MiLista = listaFavoritos();}
-    else {MiLista = _MiLista;}
+    if (!_membresia)
+        MiLista = listaFavoritos();
+    else
+        MiLista = _MiLista;
 }
 
-Usuario::Usuario(){
+Usuario::Usuario() {
     contadorPublicidad = 0;
     membresia = false;
     MiLista = listaFavoritos();
 }
 
+// =====================
+// Setters
+// =====================
 void Usuario::setNickname(const string& n) { nickname = n; }
 void Usuario::setMembresia(bool m) { membresia = m; }
 void Usuario::setCiudad(const string& c) { ciudad = c; }
 void Usuario::setPais(const string& p) { pais = p; }
 void Usuario::setFecha(const string& f) { fechaRegistro = f; }
 void Usuario::setPassword(const string& c) { password = c; }
-void Usuario::setListaFavoritos(const string& n, string* l, int nC){
+void Usuario::setListaFavoritos(const string& n, string* l, int nC) {
     MiLista = listaFavoritos(n, l, nC);
 }
-void Usuario::setContadorPublicidad(int CP) {contadorPublicidad = CP; }
+void Usuario::setContadorPublicidad(int CP) { contadorPublicidad = CP; }
 
-string Usuario::getNickname()  { return nickname; }
-bool Usuario::getMembresia()  { return membresia; }
-string Usuario::getCiudad()  { return ciudad; }
-string Usuario::getPais()  { return pais; }
-string Usuario::getFecha()  { return fechaRegistro; }
-string Usuario::getPassword()  { return password; }
-//listaFavoritos Usuario::getListaFavoritos()  { return listaFavoritos; }
+// =====================
+// Getters
+// =====================
+string Usuario::getNickname() const { return nickname; }
+bool Usuario::getMembresia() const { return membresia; }
+string Usuario::getCiudad() const { return ciudad; }
+string Usuario::getPais() const { return pais; }
+string Usuario::getFecha() const { return fechaRegistro; }
+string Usuario::getPassword() const { return password; }
 
+// AGREGADO: Implementación del getter que faltaba
+listaFavoritos Usuario::getListaFavoritos() const {
+    return MiLista;
+}
 
-/*
- * Funcion para mostrar los atributos de un usuario
-*/
+// =====================
+// Mostrar información
+// =====================
 void Usuario::mostrarInfo() {
     cout << "Usuario: " << nickname << endl;
     cout << "Membresia: " << (membresia ? "Premium" : "Estandar") << endl;
@@ -55,54 +68,52 @@ void Usuario::mostrarInfo() {
     cout << "Fecha de inscripcion: " << fechaRegistro << endl;
 }
 
-/*
- *
- * Funcion para la carga de el arreglo con los distintos usuarios(objetos de esta clase)
- *
-*/
-Usuario* Usuario::cargarUsuarios(const string& rutaArchivoU, const string& rutaArchivoLF, int& cantidad){
-
+// =====================
+// Cargar usuarios
+// =====================
+Usuario* Usuario::cargarUsuarios(const string& rutaArchivoU, const string& rutaArchivoLF, int& cantidad) {
     ifstream archivo(rutaArchivoU);
-    if(!archivo.is_open()){
-        cerr << "Error, no se pudo abrir el archivo " << rutaArchivoU << endl;
+    if (!archivo.is_open()) {
+        cerr << "Error: no se pudo abrir el archivo " << rutaArchivoU << endl;
         cantidad = 0;
         return nullptr;
     }
 
     ifstream archivoLF(rutaArchivoLF);
-    if(!archivo.is_open()){
-        cerr << "error, no se pudo abrir el archivo " << rutaArchivoLF << endl;
+    if (!archivoLF.is_open()) {
+        cerr << "Error: no se pudo abrir el archivo " << rutaArchivoLF << endl;
+        archivo.close();
+        cantidad = 0;
         return nullptr;
     }
 
-    //Primero contamos la cantidad de usuarios para el arreglo dinamico
+    // Contar usuarios
     cantidad = 0;
-    string linea, lineaLF;
-    while (getline(archivo,linea)) {
-        if (!linea.empty()){
-            cantidad ++;
-        }
+    string linea;
+    while (getline(archivo, linea)) {
+        if (!linea.empty())
+            cantidad++;
     }
-    if(cantidad == 0){
+
+    if (cantidad == 0) {
+        cerr << "El archivo de usuarios está vacío." << endl;
         archivo.close();
+        archivoLF.close();
         return nullptr;
     }
 
     Usuario* usuarios = new Usuario[cantidad];
 
-    //Segundo, cargamos los datos de cada usuario y creamos los objetos
-
+    // Reiniciar lectura
     archivo.clear();
     archivo.seekg(0);
+
     int i = 0;
+    string lineaLF;
 
-    while(getline(archivo,linea) && i < cantidad){
-
+    while (getline(archivo, linea) && i < cantidad) {
         stringstream ss(linea);
         string nicknameStr, membresiaStr, ciudadStr, paisStr, fechaRegistroStr, passwordStr;
-        bool membresiaBool;
-        string nicknameDueñoStr;
-
         getline(ss, nicknameStr, ',');
         getline(ss, membresiaStr, ',');
         getline(ss, ciudadStr, ',');
@@ -110,38 +121,49 @@ Usuario* Usuario::cargarUsuarios(const string& rutaArchivoU, const string& rutaA
         getline(ss, fechaRegistroStr, ',');
         getline(ss, passwordStr, ',');
 
-        if(membresiaStr == "1"){
-            getline(archivoLF,lineaLF);
+        bool membresiaBool = (membresiaStr == "1");
+
+        usuarios[i].setNickname(nicknameStr);
+        usuarios[i].setMembresia(membresiaBool);
+        usuarios[i].setCiudad(ciudadStr);
+        usuarios[i].setPais(paisStr);
+        usuarios[i].setFecha(fechaRegistroStr);
+        usuarios[i].setPassword(passwordStr);
+
+        // Si tiene membresía premium, cargar lista
+        if (membresiaBool && getline(archivoLF, lineaLF)) {
             stringstream sLF(lineaLF);
-            string campo = "";
-            int contador = 0, j = 0;
-            while (getline(sLF, campo, ',')) {
-                contador ++;
+            string campo;
+
+            // Primer campo: nickname dueño
+            getline(sLF, campo, ',');
+
+            // Contar canciones
+            int contador = 0;
+            streampos posInicio = sLF.tellg();
+            while (getline(sLF, campo, ',')) contador++;
+
+            if (contador > 0) {
+                // Volver al inicio de las canciones
+                sLF.clear();
+                sLF.seekg(posInicio);
+
+                string* _lista = new string[contador];
+                int j = 0;
+                while (getline(sLF, campo, ',') && j < contador) {
+                    _lista[j++] = campo;
+                }
+
+                usuarios[i].setListaFavoritos(nicknameStr, _lista, contador);
+                delete[] _lista;
             }
-            string* _lista = new string[contador-1];
-            ss.clear();
-            ss.seekg(0);
-            getline(sLF,campo, ',');
-            while (getline(sLF, campo, ',')) {
-                _lista[j] = campo;
-            }
-            usuarios[i].setListaFavoritos(nicknameStr,_lista, contador);
         }
-        try{
-            usuarios[i].setNickname(nicknameStr);
-            if(membresiaStr == "1") {membresiaBool = true;}
-            else{membresiaBool = false; }
-            usuarios[i].setMembresia(membresiaBool);
-            usuarios[i].setCiudad(ciudadStr);
-            usuarios[i].setPais(paisStr);
-            usuarios[i].setFecha(fechaRegistroStr);
-            usuarios[i].setPassword(passwordStr);
-            usuarios[i].setListaFavoritos(nicknameStr,_lista, contador);
-        } catch(...){
-            cerr << "Error al cargar la linea " << linea << " y/o el objeto usuario";
-        }
+
+        i++;
     }
+
     archivo.close();
+    archivoLF.close();
     cantidad = i;
     return usuarios;
 }

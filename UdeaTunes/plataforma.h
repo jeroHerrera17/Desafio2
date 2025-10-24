@@ -6,6 +6,7 @@
 #include "artista.h"
 #include "album.h"
 #include "cancion.h"
+#include "usuario.h"  //  Agregado para reconocer la clase Usuario
 
 using namespace std;
 
@@ -19,7 +20,7 @@ private:
     int cantArtistas;
     int cantAlbumes;
     int cantCanciones;
-    MedicionRecursos medicionRecursos;
+
     // Métodos privados auxiliares
     void limpiarPantalla();
     void pausar();

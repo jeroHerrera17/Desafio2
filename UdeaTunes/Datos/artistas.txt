@@ -1,0 +1,11 @@
+10001,Claudia Lorelle,29,Colombia,845000,3
+10002,MauroTech,34,Argentina,690000,5
+10003,Andr3s_98,27,Colombia,920000,2
+10004,Sofia_P,25,Chile,480000,9
+10005,Nina Vibes,31,Mexico,1030000,1
+10006,JuanX_,26,Colombia,520000,8
+10007,Isa Rock,30,España,615000,6
+10008,Mario Dev,33,Colombia,410000,10
+10009,Luisa L,24,Uruguay,735000,4
+10010,Rodrigo_,28,Peru,550000,7
+

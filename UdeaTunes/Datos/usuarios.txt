@@ -1,0 +1,40 @@
+luna123,1,Medellín,Colombia,2023-02-15,Luna!234
+andres98,0,Bogotá,Colombia,2024-05-10,Andr3s_98
+sofia_p,1,Santiago,Chile,2023-11-22,S0fiaPass
+tech_mauro,0,Lima,Perú,2024-01-08,M4ur0Tech
+vale_music,1,Cali,Colombia,2022-09-30,V@leMusic
+nina_vibes,0,Quito,Ecuador,2024-03-17,ninaV!bes1
+juanx_,1,Buenos Aires,Argentina,2023-08-11,Ju4nX2023
+mario_dev,0,Caracas,Venezuela,2024-06-25,devMario#1
+isa_rock,1,Medellín,Colombia,2022-12-01,IsaR0ck!
+dani_22,0,Montevideo,Uruguay,2024-04-19,Dani22**
+estrella,1,Bogotá,Colombia,2023-05-27,Estrella.23
+ricardo_21,0,Asunción,Paraguay,2024-02-12,R!cardo21
+cristina_03,1,Santiago,Chile,2023-03-14,Cris_0303
+felipe777,0,Guayaquil,Ecuador,2024-07-29,Felip3777
+alejo_mix,1,Medellín,Colombia,2022-10-05,A1ej0Mix
+luisa_l,0,Lima,Perú,2024-01-19,LuisaL_19
+rodrigo_,1,Buenos Aires,Argentina,2023-09-03,Rodr1go!
+camila_g,0,Caracas,Venezuela,2024-06-03,Cam!laG3
+mateo_music,1,Bogotá,Colombia,2023-07-21,Mate0M0
+caro_jazz,0,Montevideo,Uruguay,2024-05-14,C@roJazz
+juanma_23,1,Quito,Ecuador,2023-11-18,JuanMa#23
+maria_soul,0,Asunción,Paraguay,2024-03-22,MariaSoul1
+pipe88,1,Santiago,Chile,2023-01-25,P1pe_88
+angie_rock,0,Lima,Perú,2024-02-28,AngieR0ck
+rocio_12,1,Medellín,Colombia,2023-04-10,R0cio12!
+leo_bass,0,Bogotá,Colombia,2024-07-11,Le0Bass
+tania_d,1,Guayaquil,Ecuador,2023-06-07,TaniaD#7
+andresito,0,Cali,Colombia,2024-04-29,Andr3sito
+sergio_g,1,Buenos Aires,Argentina,2022-11-15,Serg!oG
+valen23,0,Caracas,Venezuela,2024-03-05,Valen_23
+patricia_r,1,Medellín,Colombia,2023-02-01,PatriR#1
+marco_lofi,0,Santiago,Chile,2024-05-18,MarcoL0fi
+daniela_x,1,Bogotá,Colombia,2023-09-27,Dani3laX
+raul_dev,0,Lima,Perú,2024-07-23,RaulDev!
+antonia_a,1,Quito,Ecuador,2023-08-30,Ant0niaA
+lucas_g,0,Montevideo,Uruguay,2024-02-07,LucasG_7
+carla_z,1,Cali,Colombia,2023-10-14,CarlaZ!14
+federico_t,0,Guayaquil,Ecuador,2024-03-26,Fed3rico
+natalia_r,1,Buenos Aires,Argentina,2023-12-09,Natal!aR
+mari_music,0,Asunción,Paraguay,2024-06-09,MariMuz1c
