@@ -33,7 +33,7 @@ int main() {
         return 1;
     }
 
-    cout << "\n✓ Sesion iniciada correctamente.\n";
+    cout << "\n Sesion iniciada correctamente.\n";
     usuario.mostrarInfo();
 
     // ========================================
