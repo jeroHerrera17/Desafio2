@@ -1,4 +1,5 @@
 #include "artista.h"
+#include "album.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -7,12 +8,15 @@ using namespace std;
 // ============================
 // Constructores
 // ============================
-Artista::Artista() : codigo(0), edad(0), seguidores(0), posicion(0) {}
+Artista::Artista()
+    : codigo(0), edad(0), seguidores(0), posicion(0),
+    albumes(nullptr), cantAlbumes(0) {}
 
 Artista::Artista(int codigo, const string& nombre, int edad, const string& pais,
                  int seguidores, int posicion)
     : codigo(codigo), nombre(nombre), edad(edad), pais(pais),
-    seguidores(seguidores), posicion(posicion) {}
+    seguidores(seguidores), posicion(posicion),
+    albumes(nullptr), cantAlbumes(0) {}
 
 // ============================
 // Getters
@@ -35,6 +39,22 @@ void Artista::setSeguidores(int seguidores) { this->seguidores = seguidores; }
 void Artista::setPosicion(int posicion) { this->posicion = posicion; }
 
 // ============================
+// Manejo de álbumes
+// ============================
+void Artista::setAlbumes(Album** albumesArtista, int cantidad) {
+    albumes = albumesArtista;
+    cantAlbumes = cantidad;
+}
+
+Album** Artista::getAlbumes() const {
+    return albumes;
+}
+
+int Artista::getCantAlbumes() const {
+    return cantAlbumes;
+}
+
+// ============================
 // Mostrar información completa
 // ============================
 void Artista::mostrarInfo() const {
@@ -45,6 +65,7 @@ void Artista::mostrarInfo() const {
     cout << "Pais: " << pais << endl;
     cout << "Seguidores: " << seguidores << endl;
     cout << "Posicion: " << posicion << endl;
+    cout << "Albumes: " << cantAlbumes << endl;
     cout << "---------------------------------------\n";
 }
 
@@ -126,9 +147,10 @@ void Artista::mostrarTodos(const string& rutaArchivo) {
 }
 
 // ============================
-// NUEVO: Cargar todos los artistas en memoria
+// Cargar todos los artistas y asignarles álbumes
 // ============================
-Artista* Artista::cargarTodos(const string& rutaArchivo, int& cantidad) {
+Artista* Artista::cargarTodos(const string& rutaArchivo, int& cantidad,
+                              Album* albumesGlobal, int totalAlbumes) {
     ifstream file(rutaArchivo);
     if (!file.is_open()) {
         cerr << "Error: no se pudo abrir el archivo " << rutaArchivo << endl;
@@ -181,6 +203,49 @@ Artista* Artista::cargarTodos(const string& rutaArchivo, int& cantidad) {
     }
 
     file.close();
-    cantidad = i; // Actualizar con la cantidad real cargada
+    cantidad = i;
+
+    // Ahora asignar álbumes a cada artista
+    if (albumesGlobal && totalAlbumes > 0) {
+
+
+        for (int i = 0; i < cantidad; i++) {
+            int codigoArtista = artistas[i].getCodigo();
+
+
+
+            // Contar cuántos álbumes tiene este artista
+            int cantAlbumesArtista = 0;
+            for (int j = 0; j < totalAlbumes; j++) {
+                // Obtener el ID del artista dividiendo el idAlbum por 100
+                int idArtistaDelAlbum = albumesGlobal[j].getIdAlbum() / 100;
+
+                if (idArtistaDelAlbum == codigoArtista) {
+                    cantAlbumesArtista++;
+
+                }
+            }
+
+
+            // Crear array de punteros a álbumes
+            if (cantAlbumesArtista > 0) {
+                Album** albumesArtista = new Album*[cantAlbumesArtista];
+                int idx = 0;
+
+                for (int j = 0; j < totalAlbumes; j++) {
+                    // IMPORTANTE: Usar la misma división (100) en ambos bucles
+                    int idArtistaDelAlbum = albumesGlobal[j].getIdAlbum() / 100;
+                    if (idArtistaDelAlbum == codigoArtista) {
+                        albumesArtista[idx++] = &albumesGlobal[j];
+                    }
+                }
+
+                artistas[i].setAlbumes(albumesArtista, cantAlbumesArtista);
+
+            }
+        }
+
+    }
+
     return artistas;
 }

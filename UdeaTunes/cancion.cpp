@@ -1,31 +1,47 @@
 #include "cancion.h"
+#include "creditos.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
 using namespace std;
 
-Cancion::Cancion() : idAlbum(0), nombre(""), duracion(0) {}
+Cancion::Cancion() : idAlbum(0), nombre(""), ruta128(""), ruta320(""), duracion(0), creditos() {}
 
 Cancion::Cancion(int idAlbum, const string& nombre, const string& ruta128,
                  const string& ruta320, int duracion, const Creditos& creditos)
-    : idAlbum(idAlbum), nombre(nombre), duracion(duracion) {}
+    : idAlbum(idAlbum), nombre(nombre), ruta128(ruta128),
+    ruta320(ruta320), duracion(duracion), creditos(creditos) {}
 
+// Getters
 int Cancion::getIdAlbum() const { return idAlbum; }
 string Cancion::getNombre() const { return nombre; }
+string Cancion::getRuta128() const { return ruta128; }
+string Cancion::getRuta320() const { return ruta320; }
 int Cancion::getDuracion() const { return duracion; }
+Creditos Cancion::getCreditos() const { return creditos; }
 
-void Cancion::reproducir() const {
-    cout << "♪ Reproduciendo: " << nombre << " (" << duracion << "s)" << endl;
-}
-
+// Mostrar información básica
 void Cancion::mostrarInfo() const {
     cout << "\n" << nombre << "\n";
     cout << "\tID Álbum: " << idAlbum << "\n";
     cout << "\tDuración: " << duracion << " segundos\n";
+    cout << "\tRuta 128 kbps: " << ruta128 << "\n";
+    cout << "\tRuta 320 kbps: " << ruta320 << "\n";
 }
 
+// Mostrar resumen con créditos
 void Cancion::mostrarResumen() const {
-    cout << nombre << " (" << duracion << "s)\n";
+    cout << "════════════════════════════════════════" << endl;
+    cout << " **Resumen de Canción** " << endl;
+    cout << "  - ID Álbum: " << idAlbum << endl;
+    cout << "  - Nombre: " << nombre << endl;
+    cout << "  - Duración: " << duracion << " segundos" << endl;
+    cout << "  - Rutas: " << endl;
+    cout << "      128 kbps: " << ruta128 << endl;
+    cout << "      320 kbps: " << ruta320 << endl;
+    cout << "  - Créditos:" << endl;
+    creditos.mostrar();
+    cout << "════════════════════════════════════════" << endl;
 }
 
 // Función auxiliar para limpiar espacios
@@ -35,19 +51,17 @@ static string limpiarTexto(const string& str) {
 
     while (inicio < fin && isspace(static_cast<unsigned char>(str[inicio])))
         inicio++;
-
     while (fin > inicio && isspace(static_cast<unsigned char>(str[fin - 1])))
         fin--;
 
     return str.substr(inicio, fin - inicio);
 }
 
+// Parsear texto de créditos "(nombre1... , nombre2... , etc)"
 static Creditos parsearCreditos(const string& texto) {
     string temp = texto;
-
-    if (!temp.empty() && temp.front() == '(' && temp.back() == ')') {
+    if (!temp.empty() && temp.front() == '(' && temp.back() == ')')
         temp = temp.substr(1, temp.size() - 2);
-    }
 
     string tokens[50];
     int total = 0;
@@ -55,7 +69,7 @@ static Creditos parsearCreditos(const string& texto) {
     stringstream ss(temp);
 
     while (getline(ss, token, ',')) {
-        tokens[total++] = token;
+        tokens[total++] = limpiarTexto(token);
     }
 
     int nProd = 0, nMus = 0, nComp = 0;
@@ -85,7 +99,7 @@ static Creditos parsearCreditos(const string& texto) {
     return cred;
 }
 
-// Método principal para cargar todas las canciones
+// Cargar canciones desde archivo de texto
 Cancion* Cancion::cargarCanciones(const string& rutaArchivo, int& cantidad) {
     ifstream file(rutaArchivo);
     if (!file.is_open()) {
@@ -127,53 +141,31 @@ Cancion* Cancion::cargarCanciones(const string& rutaArchivo, int& cantidad) {
             string nombre, ruta128, ruta320;
 
             // Leer idAlbum
-            if (!getline(ss, temp, ',')) {
-                cerr << "Error leyendo idAlbum: " << linea << endl;
-                continue;
-            }
-            temp = limpiarTexto(temp);
-            if (temp.empty()) {
-                cerr << "idAlbum vacío: " << linea << endl;
-                continue;
-            }
-            int idAlbum = stoi(temp);
+            if (!getline(ss, temp, ',')) continue;
+            int idAlbum = stoi(limpiarTexto(temp));
 
             // Leer nombre
-            if (!getline(ss, nombre, ',')) {
-                cerr << "Error leyendo nombre: " << linea << endl;
-                continue;
-            }
+            if (!getline(ss, nombre, ',')) continue;
             nombre = limpiarTexto(nombre);
 
             // Leer rutas
             getline(ss, ruta128, ',');
+            ruta128 = limpiarTexto(ruta128);
+
             getline(ss, ruta320, ',');
+            ruta320 = limpiarTexto(ruta320);
 
             // Leer duración
-            if (!getline(ss, temp, ',')) {
-                cerr << "Error leyendo duración: " << linea << endl;
-                continue;
-            }
-            temp = limpiarTexto(temp);
-            if (temp.empty()) {
-                cerr << "Duración vacía: " << linea << endl;
-                continue;
-            }
-            int duracion = stoi(temp);
+            if (!getline(ss, temp, ',')) continue;
+            int duracion = stoi(limpiarTexto(temp));
 
             Creditos cred = parsearCreditos(creditosTxt);
-            canciones[i] = Cancion(idAlbum, nombre, ruta128, ruta320, duracion, cred);
 
+            canciones[i] = Cancion(idAlbum, nombre, ruta128, ruta320, duracion, cred);
             i++;
 
-        } catch (const invalid_argument& e) {
-            cerr << "Error de conversión en línea: " << linea << endl;
-            cerr << "Detalle: " << e.what() << endl;
-        } catch (const out_of_range& e) {
-            cerr << "Número fuera de rango en línea: " << linea << endl;
-            cerr << "Detalle: " << e.what() << endl;
         } catch (...) {
-            cerr << "Error desconocido al parsear línea: " << linea << endl;
+            cerr << "Error al procesar la línea: " << linea << endl;
         }
     }
 
@@ -181,42 +173,4 @@ Cancion* Cancion::cargarCanciones(const string& rutaArchivo, int& cantidad) {
     cantidad = i;
     cout << "✓ Canciones cargadas: " << cantidad << endl;
     return canciones;
-}
-
-// Método alternativo para compatibilidad con código antiguo
-void Cancion::cargarCanciones(const string& rutaArchivo,
-                              int idAlbumBuscado,
-                              Cancion**& cancionesAlbum,
-                              int& cantidadAlbum,
-                              Cancion* cancionesGlobal,
-                              int totalGlobal) {
-    cantidadAlbum = 0;
-
-    // Primera pasada: contar canciones que pertenecen a este álbum
-    for (int i = 0; i < totalGlobal; i++) {
-        int idCancion = cancionesGlobal[i].getIdAlbum();
-        int albumDeCancion = idCancion / 100; // Extraer código del álbum (100010101 / 100 = 1000101)
-
-        if (albumDeCancion == idAlbumBuscado) {
-            cantidadAlbum++;
-        }
-    }
-
-    if (cantidadAlbum == 0) {
-        cancionesAlbum = nullptr;
-        return;
-    }
-
-    // Segunda pasada: crear array de punteros y asignar referencias
-    cancionesAlbum = new Cancion*[cantidadAlbum];
-    int idx = 0;
-
-    for (int i = 0; i < totalGlobal; i++) {
-        int idCancion = cancionesGlobal[i].getIdAlbum();
-        int albumDeCancion = idCancion / 100;
-
-        if (albumDeCancion == idAlbumBuscado) {
-            cancionesAlbum[idx++] = &cancionesGlobal[i];
-        }
-    }
 }

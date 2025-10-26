@@ -4,6 +4,9 @@
 #include <string>
 using namespace std;
 
+// Forward declaration
+class Album;
+
 class Artista {
 private:
     int codigo;
@@ -12,6 +15,10 @@ private:
     string pais;
     int seguidores;
     int posicion;
+
+    // Referencias a álbumes del artista
+    Album** albumes;
+    int cantAlbumes;
 
 public:
     // Constructores
@@ -37,14 +44,20 @@ public:
 
     // Métodos de visualización
     void mostrarInfo() const;
-    void mostrarResumen() const; // Nueva función para mostrar en lista
+    void mostrarResumen() const;
+
+    // Manejo de álbumes
+    void setAlbumes(Album** albumesArtista, int cantidad);
+    Album** getAlbumes() const;
+    int getCantAlbumes() const;
 
     // Métodos de archivo
     bool cargarDesdeArchivo(const string& rutaArchivo, int codigoBuscado);
     static void mostrarTodos(const string& rutaArchivo);
 
-    // Nuevo: Cargar todos los artistas en un array dinámico
-    static Artista* cargarTodos(const string& rutaArchivo, int& cantidad);
+    // Cargar todos los artistas y asignarles sus álbumes
+    static Artista* cargarTodos(const string& rutaArchivo, int& cantidad,
+                                Album* albumesGlobal, int totalAlbumes);
 };
 
 #endif

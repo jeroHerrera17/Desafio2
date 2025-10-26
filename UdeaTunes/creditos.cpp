@@ -7,19 +7,18 @@ Creditos::Creditos() {
     nProductores = nMusicos = nCompositores = 0;
 }
 
-Creditos::Creditos(string* productores, int nProd,
-                   string* musicos, int nMus,
-                   string* compositores, int nComp)
-    : nProductores(nProd), nMusicos(nMus), nCompositores(nComp) {
+Creditos::Creditos(string* prod, int nProd, string* mus, int nMus, string* comp, int nComp) {
+    nProductores = nProd;
+    nMusicos = nMus;
+    nCompositores = nComp;
 
-    this->productores = new string[nProd];
-    for (int i = 0; i < nProd; i++) this->productores[i] = productores[i];
+    productores = (nProd > 0) ? new string[nProd] : nullptr;
+    musicos = (nMus > 0) ? new string[nMus] : nullptr;
+    compositores = (nComp > 0) ? new string[nComp] : nullptr;
 
-    this->musicos = new string[nMus];
-    for (int i = 0; i < nMus; i++) this->musicos[i] = musicos[i];
-
-    this->compositores = new string[nComp];
-    for (int i = 0; i < nComp; i++) this->compositores[i] = compositores[i];
+    for (int i = 0; i < nProd; i++) productores[i] = prod[i];
+    for (int i = 0; i < nMus; i++) musicos[i] = mus[i];
+    for (int i = 0; i < nComp; i++) compositores[i] = comp[i];
 }
 
 Creditos::Creditos(const Creditos& other) {
@@ -27,13 +26,12 @@ Creditos::Creditos(const Creditos& other) {
     nMusicos = other.nMusicos;
     nCompositores = other.nCompositores;
 
-    productores = new string[nProductores];
+    productores = (nProductores > 0) ? new string[nProductores] : nullptr;
+    musicos = (nMusicos > 0) ? new string[nMusicos] : nullptr;
+    compositores = (nCompositores > 0) ? new string[nCompositores] : nullptr;
+
     for (int i = 0; i < nProductores; i++) productores[i] = other.productores[i];
-
-    musicos = new string[nMusicos];
     for (int i = 0; i < nMusicos; i++) musicos[i] = other.musicos[i];
-
-    compositores = new string[nCompositores];
     for (int i = 0; i < nCompositores; i++) compositores[i] = other.compositores[i];
 }
 
@@ -47,13 +45,12 @@ Creditos& Creditos::operator=(const Creditos& other) {
         nMusicos = other.nMusicos;
         nCompositores = other.nCompositores;
 
-        productores = new string[nProductores];
+        productores = (nProductores > 0) ? new string[nProductores] : nullptr;
+        musicos = (nMusicos > 0) ? new string[nMusicos] : nullptr;
+        compositores = (nCompositores > 0) ? new string[nCompositores] : nullptr;
+
         for (int i = 0; i < nProductores; i++) productores[i] = other.productores[i];
-
-        musicos = new string[nMusicos];
         for (int i = 0; i < nMusicos; i++) musicos[i] = other.musicos[i];
-
-        compositores = new string[nCompositores];
         for (int i = 0; i < nCompositores; i++) compositores[i] = other.compositores[i];
     }
     return *this;
@@ -66,12 +63,17 @@ Creditos::~Creditos() {
 }
 
 void Creditos::mostrar() const {
-    cout << "\n\t[CRÉDITOS]";
-    cout << "\n\tProductores: ";
+    cout << "\n\t[Créditos]" << endl;
+
+    cout << "\tProductores: ";
     for (int i = 0; i < nProductores; i++) cout << productores[i] << " ";
-    cout << "\n\tMúsicos: ";
+    cout << endl;
+
+    cout << "\tMúsicos: ";
     for (int i = 0; i < nMusicos; i++) cout << musicos[i] << " ";
-    cout << "\n\tCompositores: ";
+    cout << endl;
+
+    cout << "\tCompositores: ";
     for (int i = 0; i < nCompositores; i++) cout << compositores[i] << " ";
-    cout << "\n";
+    cout << endl;
 }

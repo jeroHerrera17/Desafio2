@@ -151,7 +151,7 @@ void Album::reproducirAleatorio() {
     srand(time(nullptr));
     int indice = rand() % cantidadCanciones;
     cout << "\nReproduciendo cancion aleatoria del album '" << nombre << "':\n";
-    referenciasCanciones[indice]->reproducir();
+    referenciasCanciones[indice]->mostrarInfo();
 }
 
 // ==========================
