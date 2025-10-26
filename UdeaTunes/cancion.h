@@ -1,41 +1,40 @@
 #ifndef CANCION_H
 #define CANCION_H
 
-#include <string>
 #include "creditos.h"
+#include <string>
 using namespace std;
 
 class Cancion {
 private:
-    int idAlbum;           // Primeros 7 dígitos del ID completo
+    int idAlbum;       // ID del álbum al que pertenece (9 dígitos)
     string nombre;
-    string rutaAudio128;
-    string rutaAudio320;
-    int duracion;          // En segundos
-    Creditos creditos;
+    int duracion;
 
 public:
-    // Constructores
     Cancion();
-    Cancion(int idAlbum, const string& nombre, const string& rutaAudio128,
-            const string& rutaAudio320, int duracion, const Creditos& creditos);
-
-    // Métodos
-    void mostrarInfo() const;
-    void mostrarResumen() const;
-    static void cargarPorAlbum(const string& rutaArchivo, int idAlbumBuscado);
-
-    // IMPORTANTE: Cargar todas las canciones en memoria
-    static Cancion* cargarTodas(const string& rutaArchivo, int& cantidad);
+    Cancion(int idAlbum, const string& nombre, const string& ruta128,
+            const string& ruta320, int duracion, const Creditos& creditos);
 
     // Getters
-    int getIdAlbum() const { return idAlbum; }
-    string getNombre() const { return nombre; }
-    int getDuracion() const { return duracion; }
-    void reproducir() const;
-};
+    int getIdAlbum() const;
+    string getNombre() const;
+    int getDuracion() const;
 
-// Función auxiliar para parsear créditos
-Creditos parsearCreditos(const string& texto);
+    void reproducir() const;
+    void mostrarInfo() const;
+    void mostrarResumen() const;
+
+    // Funciones estáticas para cargar canciones
+    static Cancion* cargarCanciones(const string& rutaArchivo, int& cantidad);
+
+    // Función antigua para compatibilidad (si la necesitas)
+    static void cargarCanciones(const string& rutaArchivo,
+                                int idAlbumBuscado,
+                                Cancion**& cancionesAlbum,
+                                int& cantidadAlbum,
+                                Cancion* cancionesGlobal,
+                                int totalGlobal);
+};
 
 #endif

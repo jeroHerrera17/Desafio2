@@ -4,49 +4,51 @@
 #include <sstream>
 using namespace std;
 
-// ----------------------------
-// Constructor
-// ----------------------------
-Cancion::Cancion() : idAlbum(0), nombre(""), rutaAudio128(""),
-    rutaAudio320(""), duracion(0) {}
+Cancion::Cancion() : idAlbum(0), nombre(""), duracion(0) {}
 
-Cancion::Cancion(int idAlbum, const string& nombre, const string& rutaAudio128,
-                 const string& rutaAudio320, int duracion, const Creditos& creditos)
-    : idAlbum(idAlbum), nombre(nombre), rutaAudio128(rutaAudio128),
-    rutaAudio320(rutaAudio320), duracion(duracion), creditos(creditos) {}
+Cancion::Cancion(int idAlbum, const string& nombre, const string& ruta128,
+                 const string& ruta320, int duracion, const Creditos& creditos)
+    : idAlbum(idAlbum), nombre(nombre), duracion(duracion) {}
 
-// ----------------------------
-// Mostrar información
-// ----------------------------
+int Cancion::getIdAlbum() const { return idAlbum; }
+string Cancion::getNombre() const { return nombre; }
+int Cancion::getDuracion() const { return duracion; }
+
+void Cancion::reproducir() const {
+    cout << "♪ Reproduciendo: " << nombre << " (" << duracion << "s)" << endl;
+}
+
 void Cancion::mostrarInfo() const {
-    cout << "\n " << nombre << "\n";
-    cout << "\tID Album: " << idAlbum << "\n";
-    cout << "\tDuracion: " << duracion << " segundos\n";
-    cout << "\tAudio 128 kbps: " << rutaAudio128 << "\n";
-    cout << "\tAudio 320 kbps: " << rutaAudio320 << "\n";
-    creditos.mostrar();
-    cout << "--------------------------------------------\n";
+    cout << "\n" << nombre << "\n";
+    cout << "\tID Álbum: " << idAlbum << "\n";
+    cout << "\tDuración: " << duracion << " segundos\n";
 }
 
-// ----------------------------
-// Mostrar resumen
-// ----------------------------
 void Cancion::mostrarResumen() const {
-    cout << " " << nombre << " (" << duracion << "s)\n"<<rutaAudio128;
+    cout << nombre << " (" << duracion << "s)\n";
 }
 
-// ----------------------------
-// Función auxiliar para procesar los créditos
-// ----------------------------
-Creditos parsearCreditos(const string& texto) {
+// Función auxiliar para limpiar espacios
+static string limpiarTexto(const string& str) {
+    size_t inicio = 0;
+    size_t fin = str.size();
+
+    while (inicio < fin && isspace(static_cast<unsigned char>(str[inicio])))
+        inicio++;
+
+    while (fin > inicio && isspace(static_cast<unsigned char>(str[fin - 1])))
+        fin--;
+
+    return str.substr(inicio, fin - inicio);
+}
+
+static Creditos parsearCreditos(const string& texto) {
     string temp = texto;
 
-    // Quitar paréntesis si existen
     if (!temp.empty() && temp.front() == '(' && temp.back() == ')') {
         temp = temp.substr(1, temp.size() - 2);
     }
 
-    // Dividir por comas
     string tokens[50];
     int total = 0;
     string token;
@@ -56,7 +58,6 @@ Creditos parsearCreditos(const string& texto) {
         tokens[total++] = token;
     }
 
-    // Contar cada tipo de crédito
     int nProd = 0, nMus = 0, nComp = 0;
     for (int i = 0; i < total; i++) {
         if (tokens[i].find("PROD") != string::npos) nProd++;
@@ -64,12 +65,10 @@ Creditos parsearCreditos(const string& texto) {
         else if (tokens[i].find("COMP") != string::npos) nComp++;
     }
 
-    // Crear arrays dinámicos
     string* productores = new string[nProd];
     string* musicos = new string[nMus];
     string* compositores = new string[nComp];
 
-    // Clasificar cada token
     int ip = 0, im = 0, ic = 0;
     for (int i = 0; i < total; i++) {
         if (tokens[i].find("PROD") != string::npos) productores[ip++] = tokens[i];
@@ -77,10 +76,8 @@ Creditos parsearCreditos(const string& texto) {
         else if (tokens[i].find("COMP") != string::npos) compositores[ic++] = tokens[i];
     }
 
-    // Crear objeto Creditos
     Creditos cred(productores, nProd, musicos, nMus, compositores, nComp);
 
-    // Liberar memoria
     delete[] productores;
     delete[] musicos;
     delete[] compositores;
@@ -88,93 +85,19 @@ Creditos parsearCreditos(const string& texto) {
     return cred;
 }
 
-// ----------------------------
-// Cargar canciones por álbum
-// ----------------------------
-void Cancion::cargarPorAlbum(const string& rutaArchivo, int idAlbumBuscado) {
+// Método principal para cargar todas las canciones
+Cancion* Cancion::cargarCanciones(const string& rutaArchivo, int& cantidad) {
     ifstream file(rutaArchivo);
     if (!file.is_open()) {
-        cerr << "Error: no se pudo abrir el archivo " << rutaArchivo << endl;
-        return;
-    }
-
-    string linea;
-    bool encontrado = false;
-    cout << "\n=== CANCIONES DEL ALBUM " << idAlbumBuscado << " ===\n";
-
-    while (getline(file, linea)) {
-        if (linea.empty()) continue;
-
-        size_t posParentesis = linea.find_last_of('(');
-        if (posParentesis == string::npos) {
-            cerr << "Formato incorrecto: no se encuentran creditos en la línea:\n" << linea << endl;
-            continue;
-        }
-
-        string parteAntes = linea.substr(0, posParentesis - 1);
-        string creditosTxt = linea.substr(posParentesis);
-
-        stringstream ss(parteAntes);
-        string idCompletoStr;
-        int idAlbum, duracion;
-        string nombre, ruta128, ruta320;
-
-        try {
-            getline(ss, idCompletoStr, ',');
-            if (idCompletoStr.empty()) throw "ID de canción vacío";
-
-            string albumIdStr = idCompletoStr.substr(0, 7);
-            idAlbum = stoi(albumIdStr);
-
-            getline(ss, nombre, ',');
-            getline(ss, ruta128, ',');
-            getline(ss, ruta320, ',');
-
-            string duracionStr;
-            getline(ss, duracionStr, ',');
-            if (duracionStr.empty()) throw "Duración vacía";
-            duracion = stoi(duracionStr);
-        }
-        catch (const char* msg) {
-            cerr << "Error al parsear línea: " << msg << endl;
-            continue;
-        }
-        catch (...) {
-            cerr << "Error desconocido al parsear línea." << endl;
-            continue;
-        }
-
-        if (idAlbum == idAlbumBuscado) {
-            Creditos cred = parsearCreditos(creditosTxt);
-            Cancion c(idAlbum, nombre, ruta128, ruta320, duracion, cred);
-            c.mostrarInfo();
-            encontrado = true;
-        }
-    }
-
-    if (!encontrado) {
-        cout << "\nNo se encontraron canciones para este álbum.\n";
-    }
-
-    file.close();
-}
-
-// ----------------------------
-// Cargar todas las canciones
-// ----------------------------
-Cancion* Cancion::cargarTodas(const string& rutaArchivo, int& cantidad) {
-    ifstream file(rutaArchivo);
-    if (!file.is_open()) {
-        cerr << "Error: no se pudo abrir el archivo de canciones.\n";
+        cerr << "Error: no se pudo abrir el archivo de canciones: " << rutaArchivo << endl;
         cantidad = 0;
         return nullptr;
     }
 
     cantidad = 0;
     string linea;
-    while (getline(file, linea)) {
+    while (getline(file, linea))
         if (!linea.empty()) cantidad++;
-    }
 
     if (cantidad == 0) {
         file.close();
@@ -182,59 +105,118 @@ Cancion* Cancion::cargarTodas(const string& rutaArchivo, int& cantidad) {
     }
 
     Cancion* canciones = new Cancion[cantidad];
-
     file.clear();
     file.seekg(0);
-    int i = 0;
 
+    int i = 0;
     while (getline(file, linea) && i < cantidad) {
         if (linea.empty()) continue;
 
-        size_t posParentesis = linea.find_last_of('(');
-        if (posParentesis == string::npos) {
-            cerr << "Advertencia: formato inválido (sin créditos) -> " << linea << endl;
-            continue;
-        }
-
-        string parteAntes = linea.substr(0, posParentesis - 1);
-        string creditosTxt = linea.substr(posParentesis);
-
-        stringstream ss(parteAntes);
-        string temp;
-        int idAlbum, duracion;
-        string nombre, ruta128, ruta320;
-
         try {
-            getline(ss, temp, ',');
-            if (temp.empty()) throw "ID vacío";
-            idAlbum = stoi(temp);
+            size_t posParentesis = linea.find_last_of('(');
+            if (posParentesis == string::npos) {
+                cerr << "Advertencia: Línea sin créditos: " << linea << endl;
+                continue;
+            }
 
-            getline(ss, nombre, ',');
+            string parteAntes = linea.substr(0, posParentesis - 1);
+            string creditosTxt = linea.substr(posParentesis);
+
+            stringstream ss(parteAntes);
+            string temp;
+            string nombre, ruta128, ruta320;
+
+            // Leer idAlbum
+            if (!getline(ss, temp, ',')) {
+                cerr << "Error leyendo idAlbum: " << linea << endl;
+                continue;
+            }
+            temp = limpiarTexto(temp);
+            if (temp.empty()) {
+                cerr << "idAlbum vacío: " << linea << endl;
+                continue;
+            }
+            int idAlbum = stoi(temp);
+
+            // Leer nombre
+            if (!getline(ss, nombre, ',')) {
+                cerr << "Error leyendo nombre: " << linea << endl;
+                continue;
+            }
+            nombre = limpiarTexto(nombre);
+
+            // Leer rutas
             getline(ss, ruta128, ',');
             getline(ss, ruta320, ',');
-            getline(ss, temp, ',');
-            if (temp.empty()) throw "Duración vacía";
-            duracion = stoi(temp);
+
+            // Leer duración
+            if (!getline(ss, temp, ',')) {
+                cerr << "Error leyendo duración: " << linea << endl;
+                continue;
+            }
+            temp = limpiarTexto(temp);
+            if (temp.empty()) {
+                cerr << "Duración vacía: " << linea << endl;
+                continue;
+            }
+            int duracion = stoi(temp);
 
             Creditos cred = parsearCreditos(creditosTxt);
             canciones[i] = Cancion(idAlbum, nombre, ruta128, ruta320, duracion, cred);
+
             i++;
-        }
-        catch (const char* msg) {
-            cerr << "Advertencia: formato inválido -> " << linea << "\n Motivo: " << msg << endl;
-            continue;
-        }
-        catch (...) {
-            cerr << "Advertencia: error desconocido -> " << linea << endl;
-            continue;
+
+        } catch (const invalid_argument& e) {
+            cerr << "Error de conversión en línea: " << linea << endl;
+            cerr << "Detalle: " << e.what() << endl;
+        } catch (const out_of_range& e) {
+            cerr << "Número fuera de rango en línea: " << linea << endl;
+            cerr << "Detalle: " << e.what() << endl;
+        } catch (...) {
+            cerr << "Error desconocido al parsear línea: " << linea << endl;
         }
     }
 
     file.close();
     cantidad = i;
+    cout << "✓ Canciones cargadas: " << cantidad << endl;
     return canciones;
 }
-void Cancion::reproducir() const {
-    cout << "Reproduciendo: " << nombre
-         << " (" << duracion << "s)" << endl;
+
+// Método alternativo para compatibilidad con código antiguo
+void Cancion::cargarCanciones(const string& rutaArchivo,
+                              int idAlbumBuscado,
+                              Cancion**& cancionesAlbum,
+                              int& cantidadAlbum,
+                              Cancion* cancionesGlobal,
+                              int totalGlobal) {
+    cantidadAlbum = 0;
+
+    // Primera pasada: contar canciones que pertenecen a este álbum
+    for (int i = 0; i < totalGlobal; i++) {
+        int idCancion = cancionesGlobal[i].getIdAlbum();
+        int albumDeCancion = idCancion / 100; // Extraer código del álbum (100010101 / 100 = 1000101)
+
+        if (albumDeCancion == idAlbumBuscado) {
+            cantidadAlbum++;
+        }
+    }
+
+    if (cantidadAlbum == 0) {
+        cancionesAlbum = nullptr;
+        return;
+    }
+
+    // Segunda pasada: crear array de punteros y asignar referencias
+    cancionesAlbum = new Cancion*[cantidadAlbum];
+    int idx = 0;
+
+    for (int i = 0; i < totalGlobal; i++) {
+        int idCancion = cancionesGlobal[i].getIdAlbum();
+        int albumDeCancion = idCancion / 100;
+
+        if (albumDeCancion == idAlbumBuscado) {
+            cancionesAlbum[idx++] = &cancionesGlobal[i];
+        }
+    }
 }
