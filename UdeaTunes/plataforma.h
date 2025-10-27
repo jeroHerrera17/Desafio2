@@ -2,11 +2,10 @@
 #define PLATAFORMA_H
 
 #include <string>
-
 #include "artista.h"
 #include "album.h"
 #include "cancion.h"
-#include "usuario.h"  //  Agregado para reconocer la clase Usuario
+#include "usuario.h"
 
 using namespace std;
 
@@ -21,30 +20,48 @@ private:
     int cantAlbumes;
     int cantCanciones;
 
-    // Métodos privados auxiliares
+    // ============================
+    // Métodos auxiliares privados
+    // ============================
     void limpiarPantalla();
     void pausar();
 
-    // Métodos privados de navegación
+    // ============================
+    // Menús de navegación
+    // ============================
     void menuArtistas(Usuario& usuario, bool& salir);
-    void menuAlbumes(Artista* artistaSeleccionado, bool& volverArtistas, bool& salir);
-    void menuCanciones(Album* albumSeleccionado, bool& volverAlbumes, bool& volverArtistas, bool& salir);
+
+    // Menú interno para usuarios premium
+    void menuPremium(Artista* artista, Usuario& usuario, bool& salir);
+
+    // Menú interno para usuarios estándar
+    void menuEstandar(Artista* artista, Usuario& usuario, bool& salir);
+
+    // Método opcional para mostrar detalles de una canción
     void mostrarDetallesCancion(Cancion* cancion, bool& volverAlbumes, bool& volverArtistas, bool& salir);
 
 public:
-    // Constructor y destructor
+    // ============================
+    // Constructor y Destructor
+    // ============================
     Plataforma();
     ~Plataforma();
 
+    // ============================
     // Métodos públicos principales
+    // ============================
     bool iniciarSesion(const string& archivo, const string& nickname,
                        const string& clave, Usuario& usuario);
+
     bool cargarDatos(const string& rutaArtistas, const string& rutaAlbumes,
                      const string& rutaCanciones);
-    void ejecutar(const Usuario& usuario);
+
+    void ejecutar(Usuario& usuario);
     void liberarMemoria();
 
+    // ============================
     // Getters para estadísticas
+    // ============================
     int getCantArtistas() const { return cantArtistas; }
     int getCantAlbumes() const { return cantAlbumes; }
     int getCantCanciones() const { return cantCanciones; }

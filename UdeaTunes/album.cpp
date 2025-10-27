@@ -7,6 +7,7 @@
 #include <sstream>
 #include <cstdlib>
 #include <ctime>
+#include <algorithm> // Necesario para std::min en una implementación completa (aunque no en este archivo, se mantiene)
 using namespace std;
 
 // ==========================
@@ -144,8 +145,8 @@ void Album::asignarCanciones(Cancion* todas, int total) {
         }
     }
 }
-//Funcion para reproducir en secuencia
 
+//Función para reproducir en secuencia
 void Album::reproducirSecuencial() {
     if (!referenciasCanciones || cantidadCanciones == 0) {
         cout << "Este álbum no tiene canciones.\n";
@@ -159,9 +160,9 @@ void Album::reproducirSecuencial() {
 
     while (true) {
         // Acceder directamente sin usar índices auxiliares
-        string nombre   = referenciasCanciones[pos]->getNombre();
-        int duracion    = referenciasCanciones[pos]->getDuracion();
-        string ruta     = referenciasCanciones[pos]->getRuta320();
+        string nombre    = referenciasCanciones[pos]->getNombre();
+        int duracion     = referenciasCanciones[pos]->getDuracion();
+        string ruta      = referenciasCanciones[pos]->getRuta320();
 
         cout << "======================================================\n";
         cout << "| Nombre:   " << nombre << "\n";
@@ -224,6 +225,7 @@ void Album::reproducirSecuencial() {
         }
     }
 }
+
 void Album::reproducirAleatorio() {
     if (!referenciasCanciones || cantidadCanciones == 0) {
         cout << "Este album no tiene canciones.\n";
@@ -318,6 +320,7 @@ void Album::reproducirAleatorio() {
         }
     }
 }
+
 void Album::reproducirAleatorioEstandar() {
     if (!referenciasCanciones || cantidadCanciones == 0) {
         cout << "Este álbum no tiene canciones.\n";
@@ -381,6 +384,7 @@ static void parsearGeneros(const string& texto, string generos[4]) {
     }
 }
 
+// LÓGICA DE CARGA SIN MENSAJES DE DEPURACIÓN
 Album* Album::cargarTodos(const string& rutaArchivo, int& cantidad,
                           Cancion* todasCanciones, int totalCanciones) {
     ifstream file(rutaArchivo);
@@ -392,6 +396,7 @@ Album* Album::cargarTodos(const string& rutaArchivo, int& cantidad,
 
     string linea;
     cantidad = 0;
+    // Se asume que el tamaño fijo de 1000 es suficiente
     Album* lista = new Album[1000];
 
     while (getline(file, linea)) {
@@ -454,69 +459,9 @@ Album* Album::cargarTodos(const string& rutaArchivo, int& cantidad,
 
     file.close();
 
-    cout << "\n========================================\n";
-    cout << "  RESUMEN DE CARGA DE ALBUMES\n";
-    cout << "========================================\n";
-    cout << "Total de albumes cargados: " << cantidad << endl;
-    cout << "========================================\n\n";
+    // NOTA: Se eliminaron las variables 'totalCancionesAsignadas' y
+    // 'albumesSinCanciones' ya que solo se utilizaban para imprimir estadísticas.
 
-    int totalCancionesAsignadas = 0;
-    int albumesSinCanciones = 0;
-
-    for (int i = 0; i < cantidad; i++) {
-        int cant = lista[i].getCantCanciones();
-        totalCancionesAsignadas += cant;
-
-        cout << "\n--- Album #" << (i + 1) << " ---\n";
-        cout << "  ID Album: " << lista[i].getIdAlbum() << endl;
-        cout << "  Nombre: " << lista[i].getNombre() << endl;
-        cout << "  Generos: ";
-        for (int j = 0; j < 4; j++) {
-            string gen = lista[i].getGenero(j);
-            if (!gen.empty()) {
-                cout << gen;
-                if (j < 3 && !lista[i].getGenero(j+1).empty()) cout << ", ";
-            }
-        }
-        cout << endl;
-        cout << "  Fecha: " << lista[i].getFechaLanzamiento() << endl;
-        cout << "  Duracion: " << lista[i].getDuracionTotal() << " min" << endl;
-        cout << "  Sello: " << lista[i].getSello() << endl;
-        cout << "  Portada: " << lista[i].getPortada() << endl;
-        cout << "  Puntuacion: " << lista[i].getPuntuacion() << "/10" << endl;
-        cout << "  >> Canciones asignadas: " << cant << endl;
-
-        if (cant == 0) {
-            albumesSinCanciones++;
-            cout << "  ADVERTENCIA: Este album no tiene canciones asignadas!\n";
-        } else {
-            cout << "  OK: Canciones encontradas correctamente\n";
-            Cancion** canciones = lista[i].getCanciones();
-            int muestraMax = (cant < 3) ? cant : 3;
-            cout << "  Muestra de canciones:\n";
-            for (int k = 0; k < muestraMax; k++) {
-                cout << "    " << (k+1) << ". " << canciones[k]->getNombre()
-                << " (ID: " << canciones[k]->getIdAlbum() << ")\n";
-            }
-            if (cant > 3) {
-                cout << "    ... y " << (cant - 3) << " canciones mas\n";
-            }
-        }
-    }
-
-    cout << "\n========================================\n";
-    cout << "  ESTADISTICAS FINALES\n";
-    cout << "========================================\n";
-    cout << "Total de albumes: " << cantidad << endl;
-    cout << "Total de canciones asignadas: " << totalCancionesAsignadas << endl;
-    cout << "Albumes sin canciones: " << albumesSinCanciones << endl;
-    cout << "Promedio de canciones por album: ";
-    if (cantidad > 0) {
-        cout << (float)totalCancionesAsignadas / cantidad << endl;
-    } else {
-        cout << "0" << endl;
-    }
-    cout << "========================================\n\n";
-
+    // La lógica principal de carga de datos finaliza aquí.
     return lista;
 }
