@@ -9,6 +9,9 @@
 
 using namespace std;
 
+// Forward declaration
+class publicidad;
+
 class Plataforma {
 private:
     // Datos en memoria
@@ -20,48 +23,33 @@ private:
     int cantAlbumes;
     int cantCanciones;
 
-    // ============================
-    // Métodos auxiliares privados
-    // ============================
-    void limpiarPantalla();
+    // Métodos privados auxiliares
     void pausar();
 
-    // ============================
-    // Menús de navegación
-    // ============================
-    void menuArtistas(Usuario& usuario, bool& salir);
+    // Métodos privados de navegación - PREMIUM
+    void menuPremium(Usuario& usuario, bool& salir);
+    void menuAlbumesPremium(Artista* artista, bool& volver, bool& salir);
+    void menuCancionesPremium(Album* album, Artista* artista, bool& volverAlbum, bool& volverArtistas, bool& salir);
 
-    // Menú interno para usuarios premium
-    void menuPremium(Artista* artista, bool& salir);
-
-    // Menú interno para usuarios estándar
-    void menuEstandar(Artista* artista, Usuario& usuario, bool& salir);
-
-    // Método opcional para mostrar detalles de una canción
-    void mostrarDetallesCancion(Cancion* cancion, bool& volverAlbumes, bool& volverArtistas, bool& salir);
+    // Métodos privados de navegación - ESTÁNDAR
+    void menuEstandar(Usuario& usuario, bool& salir);
+    void menuAlbumesEstandar(Artista* artista, publicidad* mensajesPublicitarios, int cantidadPublicidad, bool& volver, bool& salir);
+    void menuCancionesEstandar(Album* album, Artista* artista, publicidad* mensajesPublicitarios, int cantidadPublicidad, bool& volverAlbum, bool& volverArtistas, bool& salir);
 
 public:
-    // ============================
-    // Constructor y Destructor
-    // ============================
+    // Constructor y destructor
     Plataforma();
     ~Plataforma();
 
-    // ============================
     // Métodos públicos principales
-    // ============================
     bool iniciarSesion(const string& archivo, const string& nickname,
                        const string& clave, Usuario& usuario);
-
     bool cargarDatos(const string& rutaArtistas, const string& rutaAlbumes,
                      const string& rutaCanciones);
-
-    void ejecutar(Usuario& usuario);
+    void ejecutar(const Usuario& usuario);
     void liberarMemoria();
 
-    // ============================
     // Getters para estadísticas
-    // ============================
     int getCantArtistas() const { return cantArtistas; }
     int getCantAlbumes() const { return cantAlbumes; }
     int getCantCanciones() const { return cantCanciones; }
