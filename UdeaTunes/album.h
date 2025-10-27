@@ -1,6 +1,6 @@
 #ifndef ALBUM_H
 #define ALBUM_H
-
+#include "usuario.h"
 #include <string>
 #include "cancion.h"
 using namespace std;
@@ -61,13 +61,14 @@ public:
     void mostrarInfo() const;      ///< Muestra toda la información detallada del álbum
     void mostrarResumen() const;   ///< Muestra un resumen con nombre, géneros y puntuación
     void mostrarCanciones() const; ///< Muestra las canciones del álbum
-    void mostrarDepuracion() const;
+
     // ==========================
     // FUNCIONALIDAD
     // ==========================
     void asignarCanciones(Cancion* todas, int total); ///< Asocia canciones por ID del álbum
     void reproducirAleatorio(); ///< Reproduce una canción aleatoria del álbum
-
+    void reproducirAleatorioEstandar();
+    void reproducirSecuencial();
     // ==========================
     // ARCHIVOS
     // ==========================

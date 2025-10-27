@@ -19,7 +19,7 @@ public:
     Cancion();
     Cancion(int idAlbum, const string& nombre, const string& ruta128,
             const string& ruta320, int duracion, const Creditos& creditos);
-
+    void asociarCreditos(Cancion* canciones, int cantidad);
     // Getters
     int getIdAlbum() const;
     string getNombre() const;
@@ -35,7 +35,7 @@ public:
 
     // Cargar canciones desde archivo
     static Cancion* cargarCanciones(const string& rutaArchivo, int& cantidad);
-
+    void asociarCreditos(Cancion* canciones, int cantidad, const string& rutaCreditos);
     // Método auxiliar (compatibilidad si se necesita por álbum)
     static void cargarCanciones(const string& rutaArchivo,
                                 int idAlbumBuscado,

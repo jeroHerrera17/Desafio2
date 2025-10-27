@@ -20,7 +20,7 @@ Plataforma::~Plataforma() {
 }
 
 // ============================
-// Función auxiliar: limpiar texto
+// Funcion auxiliar: limpiar texto
 // ============================
 string limpiar(const string& texto) {
     size_t inicio = 0;
@@ -36,7 +36,7 @@ string limpiar(const string& texto) {
 }
 
 // ============================
-// Inicio de sesión
+// Inicio de sesion
 // ============================
 bool Plataforma::iniciarSesion(const string& archivo, const string& nickname,
                                const string& clave, Usuario& usuario) {
@@ -95,15 +95,15 @@ bool Plataforma::cargarDatos(const string& rutaArtistas,
         return false;
     }
 
-    // 2. Cargar álbumes con las canciones ya cargadas
+    // 2. Cargar albumes con las canciones ya cargadas
     albumes = Album::cargarTodos(rutaAlbumes, cantAlbumes, canciones, cantCanciones);
     if (!albumes) {
-        cerr << "Error: no se pudieron cargar álbumes.\n";
+        cerr << "Error: no se pudieron cargar albumes.\n";
         liberarMemoria();
         return false;
     }
 
-    // 3. Cargar artistas con los álbumes ya cargados
+    // 3. Cargar artistas con los albumes ya cargados
     artistas = Artista::cargarTodos(rutaArtistas, cantArtistas, albumes, cantAlbumes);
     if (!artistas) {
         cerr << "Error: no se pudieron cargar artistas.\n";
@@ -132,7 +132,7 @@ void Plataforma::liberarMemoria() {
         }
     }
 
-    // Liberar los arrays de punteros de cada álbum
+    // Liberar los arrays de punteros de cada album
     if (albumes) {
         for (int i = 0; i < cantAlbumes; i++) {
             Cancion** cancionesAlbum = albumes[i].getCanciones();
@@ -157,7 +157,7 @@ void Plataforma::pausar() {
 }
 
 // ============================
-// Ejecutar la aplicación
+// Ejecutar la aplicacion
 // ============================
 void Plataforma::ejecutar(const Usuario& usuario) {
     pausar();
@@ -192,10 +192,10 @@ void Plataforma::menuArtistas(Usuario& usuario, bool& salir) {
     }
 
     cout << "\n-----------------------------\n";
-    cout << "  Ingrese código del artista\n";
+    cout << "  Ingrese codigo del artista\n";
     cout << "  [S/s] Salir\n";
     cout << "-----------------------------\n";
-    cout << "Opción: ";
+    cout << "Opcion: ";
 
     string entrada;
     cin >> entrada;
@@ -210,7 +210,7 @@ void Plataforma::menuArtistas(Usuario& usuario, bool& salir) {
     try {
         codigoArtista = stoi(entrada);
     } catch (...) {
-        cout << "\nEntrada inválida. Ingrese un número o 'S' para salir.\n";
+        cout << "\nEntrada invalida. Ingrese un numero o 'S' para salir.\n";
         pausar();
         return;
     }
@@ -224,7 +224,7 @@ void Plataforma::menuArtistas(Usuario& usuario, bool& salir) {
     }
 
     if (!artistaSeleccionado) {
-        cout << "\nNo se encontró ningún artista con ese código.\n";
+        cout << "\nNo se encontro ningun artista con ese codigo.\n";
         pausar();
         return;
     }
@@ -236,7 +236,7 @@ void Plataforma::menuArtistas(Usuario& usuario, bool& salir) {
 }
 
 // ============================
-// MENU: Álbumes del Artista
+// MENU: albumes del Artista
 // ============================
 void Plataforma::menuAlbumes(Artista* artistaSeleccionado,
                              bool& volverArtistas,
@@ -248,20 +248,20 @@ void Plataforma::menuAlbumes(Artista* artistaSeleccionado,
     artistaSeleccionado->mostrarInfo();
 
     cout << "\n=============================\n";
-    cout << "    ÁLBUMES DEL ARTISTA\n";
+    cout << "    aLBUMES DEL ARTISTA\n";
     cout << "=============================\n\n";
 
     Album** albumesArtista = artistaSeleccionado->getAlbumes();
     int cantidadAlbumes = artistaSeleccionado->getCantAlbumes();
 
     if (!albumesArtista || cantidadAlbumes == 0) {
-        cout << "No se encontraron álbumes para este artista.\n";
+        cout << "No se encontraron albumes para este artista.\n";
         pausar();
         volverArtistas = true;
         return;
     }
 
-    // Mostrar los álbumes del artista
+    // Mostrar los albumes del artista
     for (int i = 0; i < cantidadAlbumes; i++) {
         albumesArtista[i]->mostrarResumen();
     }
@@ -270,9 +270,9 @@ void Plataforma::menuAlbumes(Artista* artistaSeleccionado,
     cout << "  [I/i] Ver info del artista\n";
     cout << "  [A/a] Elegir otro artista\n";
     cout << "  [S/s] Salir\n";
-    cout << "  O ingrese código del álbum\n";
+    cout << "  O ingrese codigo del album\n";
     cout << "-----------------------------\n";
-    cout << "Opción: ";
+    cout << "Opcion: ";
 
     string entrada;
     cin >> entrada;
@@ -296,7 +296,7 @@ void Plataforma::menuAlbumes(Artista* artistaSeleccionado,
     try {
         codigoAlbum = stoi(entrada);
     } catch (...) {
-        cout << "\nEntrada inválida.\n";
+        cout << "\nEntrada invalida.\n";
         pausar();
         return;
     }
@@ -310,7 +310,7 @@ void Plataforma::menuAlbumes(Artista* artistaSeleccionado,
     }
 
     if (!albumSeleccionado) {
-        cout << "\nNo se encontró ningún álbum con ese código.\n";
+        cout << "\nNo se encontro ningun album con ese codigo.\n";
         pausar();
         return;
     }
@@ -322,7 +322,7 @@ void Plataforma::menuAlbumes(Artista* artistaSeleccionado,
 }
 
 // ============================
-// MENU: Canciones del Álbum
+// MENU: Canciones del album
 // ============================
 void Plataforma::menuCanciones(Album* albumSeleccionado,
                                bool& volverAlbumes,
@@ -330,17 +330,20 @@ void Plataforma::menuCanciones(Album* albumSeleccionado,
                                bool& salir) {
 
     cout << "=============================\n";
-    cout << "   CANCIONES DEL ÁLBUM\n";
+    cout << "   CANCIONES DEL aLBUM\n";
     cout << "=============================\n";
-    cout << "Álbum: " << albumSeleccionado->getNombre() << "\n";
-    cout << "Género: " << albumSeleccionado->getGenero(0) << "\n";  // CORREGIDO: agregado índice
+    cout << "album: " << albumSeleccionado->getNombre() << "\n";
+    cout << "Generos: ";
+    for(int i=0;i<4;i++){
+        cout<< albumSeleccionado->getGenero(i)<<",";
+    } // CORREGIDO: agregado indice
     cout << "-----------------------------\n";
 
     Cancion** cancionesAlbum = albumSeleccionado->getCanciones();
     int cantidad = albumSeleccionado->getCantCanciones();
 
     if (!cancionesAlbum || cantidad == 0) {
-        cout << "No hay canciones en este álbum.\n";
+        cout << "No hay canciones en este album.\n";
         pausar();
         volverAlbumes = true;
         return;
@@ -352,13 +355,13 @@ void Plataforma::menuCanciones(Album* albumSeleccionado,
     }
 
     cout << "\n-----------------------------\n";
-    cout << "  [R/r] Reproducir álbum completo\n";
-    cout << "  [A/a] Volver a álbumes\n";
+    cout << "  [R/r] Reproducir album completo\n";
+    cout << "  [A/a] Volver a albumes\n";
     cout << "  [T/t] Volver a artistas\n";
     cout << "  [S/s] Salir\n";
-    cout << "  O ingrese número de canción para reproducir\n";
+    cout << "  O ingrese numero de cancion para reproducir\n";
     cout << "-----------------------------\n";
-    cout << "Opción: ";
+    cout << "Opcion: ";
 
     string entrada;
     cin >> entrada;
@@ -390,7 +393,7 @@ void Plataforma::menuCanciones(Album* albumSeleccionado,
         cancionesAlbum[opcion - 1]->mostrarResumen();
 
     } catch (...) {
-        cout << "Entrada inválida.\n";
+        cout << "Entrada invalida.\n";
     }
 
     pausar();

@@ -1,5 +1,8 @@
 #include "album.h"
+#include "usuario.h"
 #include <iostream>
+#include <thread>
+#include <chrono>
 #include <fstream>
 #include <sstream>
 #include <cstdlib>
@@ -141,59 +144,214 @@ void Album::asignarCanciones(Cancion* todas, int total) {
         }
     }
 }
+//Funcion para reproducir en secuencia
 
+void Album::reproducirSecuencial() {
+    if (!referenciasCanciones || cantidadCanciones == 0) {
+        cout << "Este álbum no tiene canciones.\n";
+        return;
+    }
+
+    int pos = 0;
+    string entrada;
+    int opcion;
+    string estado = "Reproduciendo";
+
+    while (true) {
+        // Acceder directamente sin usar índices auxiliares
+        string nombre   = referenciasCanciones[pos]->getNombre();
+        int duracion    = referenciasCanciones[pos]->getDuracion();
+        string ruta     = referenciasCanciones[pos]->getRuta320();
+
+        cout << "======================================================\n";
+        cout << "| Nombre:   " << nombre << "\n";
+        cout << "| Duración: " << duracion << " segundos\n";
+        cout << "| Ruta:     " << ruta << "\n";
+        cout << "| Estado:   " << estado << "\n";
+        cout << "======================================================\n";
+        cout << "\nOpciones:\n";
+        cout << "1: Reproducir\n";
+        cout << "2: Detener\n";
+        cout << "3: Siguiente canción\n";
+        cout << "4: Canción anterior\n";
+        cout << "5: Salir\n";
+        cout << "Ingrese opción: ";
+        cin >> entrada;
+
+        try {
+            opcion = stoi(entrada);
+        } catch (...) {
+            cout << "Entrada no válida. Intente de nuevo.\n";
+            continue;
+        }
+
+        switch (opcion) {
+        case 1:
+            estado = "Reproduciendo";
+            cout << "|> Reproduciendo \"" << nombre << "\"...\n";
+            break;
+
+        case 2:
+            estado = "Detenida";
+            cout << " Reproducción detenida.\n";
+            break;
+
+        case 3: // Siguiente canción
+            if (pos < cantidadCanciones - 1) {
+                pos++;
+                estado = "Reproduciendo";
+            } else {
+                cout << "  Esta es la última canción del álbum.\n";
+            }
+            break;
+
+        case 4: // Canción anterior
+            if (pos > 0) {
+                pos--;
+                estado = "Reproduciendo";
+            } else {
+                cout << "  Esta es la primera canción.\n";
+            }
+            break;
+
+        case 5:
+            cout << "== Saliendo del reproductor secuencial... ==\n";
+            return;
+
+        default:
+            cout << "Opción no válida.\n";
+            break;
+        }
+    }
+}
 void Album::reproducirAleatorio() {
     if (!referenciasCanciones || cantidadCanciones == 0) {
         cout << "Este album no tiene canciones.\n";
         return;
     }
 
+    // Crear arreglo de indices 0..cantidadCanciones-1
+    int* indices = new int[cantidadCanciones];
+    for (int i = 0; i < cantidadCanciones; i++) {
+        indices[i] = i;
+    }
+
+    // Mezclar los indices usando Fisher-Yates
     srand(time(nullptr));
-    int indice = rand() % cantidadCanciones;
-    cout << "\nReproduciendo cancion aleatoria del album '" << nombre << "':\n";
-    referenciasCanciones[indice]->mostrarInfo();
-}
-
-// ==========================
-// DEPURACION
-// ==========================
-void Album::mostrarDepuracion() const {
-    cout << "\n====== DEPURACION DEL ALBUM ======\n";
-    cout << "Direccion del objeto Album: " << this << endl;
-    cout << "ID del Album: " << idAlbum << endl;
-    cout << "Nombre: '" << nombre << "'" << endl;
-    cout << "Generos: ";
-    for (int i = 0; i < 4; i++) {
-        cout << "[" << i << "]: '" << generos[i] << "' ";
+    for (int i = cantidadCanciones - 1; i > 0; i--) {
+        int j = rand() % (i + 1);
+        swap(indices[i], indices[j]);
     }
-    cout << endl;
-    cout << "Fecha de lanzamiento: '" << fechaLanzamiento << "'" << endl;
-    cout << "Duracion total: " << duracionTotal << " min" << endl;
-    cout << "Sello: '" << sello << "'" << endl;
-    cout << "Portada: '" << portada << "'" << endl;
-    cout << "Puntuacion: " << puntuacion << "/10" << endl;
-    cout << "Cantidad de canciones: " << cantidadCanciones << endl;
-    cout << "Direccion del arreglo de canciones: " << referenciasCanciones << endl;
 
-    if (referenciasCanciones != nullptr && cantidadCanciones > 0) {
-        cout << "\n--- Detalles de las canciones ---\n";
-        for (int i = 0; i < cantidadCanciones; i++) {
-            cout << "  Cancion[" << i << "] en direccion: " << referenciasCanciones[i];
-            if (referenciasCanciones[i] != nullptr) {
-                cout << "\n    - ID Cancion: " << referenciasCanciones[i]->getIdAlbum();
-                cout << "\n    - Nombre: " << referenciasCanciones[i]->getNombre();
-                cout << "\n    - Duracion: " << referenciasCanciones[i]->getDuracion() << "s";
-            } else {
-                cout << " -> PUNTERO NULO!";
-            }
-            cout << endl;
+    int pos = 0;
+    string entrada;
+    int opcion;
+    string estado="Reproduciendo";
+    while (true) {
+        int indiceActual = indices[pos];
+        string nombre = referenciasCanciones[indiceActual]->getNombre();
+        int duracion = referenciasCanciones[indiceActual]->getDuracion();
+        string ruta = referenciasCanciones[indiceActual]->getRuta320();
+
+        cout << "======================================================\n";
+        cout << "|----------------------------------------------------\n";
+        cout << "| Nombre:   " << nombre << "\n";
+        cout << "| Duracion: " << duracion << " segundos\n";
+        cout << "| Ruta:     " << ruta << "\n";
+        cout << "| Estado:   " << estado << "\n";
+        cout << "======================================================\n";
+        cout << "\nOpciones:\n";
+        cout << "1: Reproducir\n";
+        cout << "2: Detener\n";
+        cout << "3: Siguiente cancion\n";
+        cout << "4: Cancion anterior\n";
+        cout << "5: Salir\n";
+        cout << "Ingrese opcion: ";
+        cin >> entrada;
+
+        try {
+            opcion = stoi(entrada);
+        } catch (...) {
+            cout << "Entrada no valida. Intente de nuevo.\n";
+            continue;
         }
-    } else {
-        cout << "  ADVERTENCIA: No hay canciones asignadas o el puntero es nulo.\n";
+
+        switch (opcion) {
+        case 1:
+            estado = "Reproduciendo";
+            cout << "|>  Reproduciendo \"" << nombre << "\"...\n";
+            break;
+
+        case 2:
+            estado = "||Detenida";
+            cout << "  Reproduccion detenida.\n";
+            break;
+
+        case 3: // Siguiente canción
+            if (pos < cantidadCanciones - 1) {
+                pos++;
+                estado = "|>Reproduciendo";
+            } else {
+                cout << "  Esta es la última canción.\n";
+                estado = "|>Reproduciendo";
+            }
+            break;
+
+        case 4: // Canción anterior
+            if (pos > 0) {
+                pos--;
+                estado = "Reproduciendo";
+            } else {
+                cout << "  Esta es la primera canción.!\n";
+                estado = "Reproduciendo";
+            }
+            break;
+
+        case 5:
+            delete[] indices;
+            cout << "==Saliendo del reproductor...==\n";
+            return;
+
+        default:
+            cout << "Opcion no valida.\n";
+            break;
+        }
+    }
+}
+void Album::reproducirAleatorioEstandar() {
+    if (!referenciasCanciones || cantidadCanciones == 0) {
+        cout << "Este álbum no tiene canciones.\n";
+        return;
     }
 
-    cout << "==================================\n\n";
+    int* indices = new int[cantidadCanciones];
+    for (int i = 0; i < cantidadCanciones; i++) indices[i] = i;
+
+    srand(time(nullptr));
+    for (int i = cantidadCanciones - 1; i > 0; i--) {
+        int j = rand() % (i + 1);
+        swap(indices[i], indices[j]);
+    }
+
+    cout << "->Usuario estándar: las canciones avanzan automáticamente cada 5 segundos.\n";
+    int pos = 0;
+    string estado = "Reproduciendo";
+
+    while (pos < cantidadCanciones) {
+        int idx = indices[pos];
+        cout << "======================================================\n";
+        cout << "| Nombre:   " << referenciasCanciones[idx]->getNombre() << "\n";
+        cout << "| Duración: " << referenciasCanciones[idx]->getDuracion() << " segundos\n";
+        cout << "| Estado:   " << estado << "\n";
+        cout << "======================================================\n";
+        std::this_thread::sleep_for(std::chrono::seconds(5));
+        pos++;
+    }
+
+    cout << " Fin del álbum.\n";
+    delete[] indices;
 }
+
 
 // ==========================
 // ARCHIVOS
