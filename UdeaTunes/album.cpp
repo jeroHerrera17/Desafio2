@@ -7,7 +7,7 @@
 #include <sstream>
 #include <cstdlib>
 #include <ctime>
-#include <algorithm> // Necesario para std::min en una implementación completa (aunque no en este archivo, se mantiene)
+
 using namespace std;
 
 // ==========================
@@ -146,10 +146,10 @@ void Album::asignarCanciones(Cancion* todas, int total) {
     }
 }
 
-//Función para reproducir en secuencia
+//Funcion para reproducir en secuencia
 void Album::reproducirSecuencial() {
     if (!referenciasCanciones || cantidadCanciones == 0) {
-        cout << "Este álbum no tiene canciones.\n";
+        cout << "Este album no tiene canciones.\n";
         return;
     }
 
@@ -159,30 +159,30 @@ void Album::reproducirSecuencial() {
     string estado = "Reproduciendo";
 
     while (true) {
-        // Acceder directamente sin usar índices auxiliares
+        // Acceder directamente sin usar indices auxiliares
         string nombre    = referenciasCanciones[pos]->getNombre();
         int duracion     = referenciasCanciones[pos]->getDuracion();
         string ruta      = referenciasCanciones[pos]->getRuta320();
 
         cout << "======================================================\n";
         cout << "| Nombre:   " << nombre << "\n";
-        cout << "| Duración: " << duracion << " segundos\n";
+        cout << "| Duracion: " << duracion << " segundos\n";
         cout << "| Ruta:     " << ruta << "\n";
         cout << "| Estado:   " << estado << "\n";
         cout << "======================================================\n";
         cout << "\nOpciones:\n";
         cout << "1: Reproducir\n";
         cout << "2: Detener\n";
-        cout << "3: Siguiente canción\n";
-        cout << "4: Canción anterior\n";
+        cout << "3: Siguiente cancion\n";
+        cout << "4: Cancion anterior\n";
         cout << "5: Salir\n";
-        cout << "Ingrese opción: ";
+        cout << "Ingrese opcion: ";
         cin >> entrada;
 
         try {
             opcion = stoi(entrada);
         } catch (...) {
-            cout << "Entrada no válida. Intente de nuevo.\n";
+            cout << "Entrada no valida. Intente de nuevo.\n";
             continue;
         }
 
@@ -194,24 +194,24 @@ void Album::reproducirSecuencial() {
 
         case 2:
             estado = "Detenida";
-            cout << " Reproducción detenida.\n";
+            cout << " Reproduccion detenida.\n";
             break;
 
-        case 3: // Siguiente canción
+        case 3: // Siguiente cancion
             if (pos < cantidadCanciones - 1) {
                 pos++;
                 estado = "Reproduciendo";
             } else {
-                cout << "  Esta es la última canción del álbum.\n";
+                cout << "  Esta es la ultima cancion del album.\n";
             }
             break;
 
-        case 4: // Canción anterior
+        case 4: // Cancion anterior
             if (pos > 0) {
                 pos--;
                 estado = "Reproduciendo";
             } else {
-                cout << "  Esta es la primera canción.\n";
+                cout << "  Esta es la primera cancion.\n";
             }
             break;
 
@@ -220,7 +220,7 @@ void Album::reproducirSecuencial() {
             return;
 
         default:
-            cout << "Opción no válida.\n";
+            cout << "Opcion no valida.\n";
             break;
         }
     }
@@ -289,22 +289,22 @@ void Album::reproducirAleatorio() {
             cout << "  Reproduccion detenida.\n";
             break;
 
-        case 3: // Siguiente canción
+        case 3: // Siguiente cancion
             if (pos < cantidadCanciones - 1) {
                 pos++;
                 estado = "|>Reproduciendo";
             } else {
-                cout << "  Esta es la última canción.\n";
+                cout << "  Esta es la ultima cancion.\n";
                 estado = "|>Reproduciendo";
             }
             break;
 
-        case 4: // Canción anterior
+        case 4: // Cancion anterior
             if (pos > 0) {
                 pos--;
                 estado = "Reproduciendo";
             } else {
-                cout << "  Esta es la primera canción.!\n";
+                cout << "  Esta es la primera cancion.!\n";
                 estado = "Reproduciendo";
             }
             break;
@@ -320,10 +320,10 @@ void Album::reproducirAleatorio() {
         }
     }
 }
-
-void Album::reproducirAleatorioEstandar() {
+void Album::reproducirAleatorioEstandar(publicidad* mensajesPublicitarios, int cantidadPublicidad) {
+    publicidad pub;
     if (!referenciasCanciones || cantidadCanciones == 0) {
-        cout << "Este álbum no tiene canciones.\n";
+        cout << "Este album no tiene canciones.\n";
         return;
     }
 
@@ -336,24 +336,35 @@ void Album::reproducirAleatorioEstandar() {
         swap(indices[i], indices[j]);
     }
 
-    cout << "->Usuario estándar: las canciones avanzan automáticamente cada 5 segundos.\n";
+    cout << "-> Usuario estandar: las canciones avanzan automaticamente cada 5 segundos.\n";
     int pos = 0;
     string estado = "Reproduciendo";
+    int contadorPublicidad = 0;
 
     while (pos < cantidadCanciones) {
         int idx = indices[pos];
         cout << "======================================================\n";
         cout << "| Nombre:   " << referenciasCanciones[idx]->getNombre() << "\n";
-        cout << "| Duración: " << referenciasCanciones[idx]->getDuracion() << " segundos\n";
-        cout << "| Duración: " << referenciasCanciones[idx]->getRuta128()<<endl;
+        cout << "| Duracion: " << referenciasCanciones[idx]->getDuracion() << " segundos\n";
+        cout << "| Ruta:     " << referenciasCanciones[idx]->getRuta128() << "\n";
         cout << "| Estado:   " << estado << "\n";
         cout << "======================================================\n";
+
         std::this_thread::sleep_for(std::chrono::seconds(5));
         pos++;
-        cout<<"\n\n\n\n\n";
+        contadorPublicidad++;
+
+        // Cada 3 canciones mostrar publicidad
+
+        if (contadorPublicidad == 3 && cantidadPublicidad > 0) {
+            pub.verPublicidad(mensajesPublicitarios, cantidadPublicidad);
+            contadorPublicidad = 0; // Reiniciar contador
+        }
+
+        cout << "\n\n";
     }
 
-    cout << " Fin del álbum.\n";
+    cout << "Fin del album.\n";
     delete[] indices;
 }
 
@@ -386,7 +397,7 @@ static void parsearGeneros(const string& texto, string generos[4]) {
     }
 }
 
-// LÓGICA DE CARGA SIN MENSAJES DE DEPURACIÓN
+// LoGICA DE CARGA SIN MENSAJES DE DEPURACIoN
 Album* Album::cargarTodos(const string& rutaArchivo, int& cantidad,
                           Cancion* todasCanciones, int totalCanciones) {
     ifstream file(rutaArchivo);
@@ -461,9 +472,5 @@ Album* Album::cargarTodos(const string& rutaArchivo, int& cantidad,
 
     file.close();
 
-    // NOTA: Se eliminaron las variables 'totalCancionesAsignadas' y
-    // 'albumesSinCanciones' ya que solo se utilizaban para imprimir estadísticas.
-
-    // La lógica principal de carga de datos finaliza aquí.
     return lista;
 }

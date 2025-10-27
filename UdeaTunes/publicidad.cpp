@@ -88,10 +88,10 @@ void publicidad::verPublicidad(publicidad* mensajesPublicitarios, const int cant
     }
 
     //Y para finalizar, mostramos el mensaje seleccionado junto con su categoria
+    cout<<"\n\n\n\n\n";
     cout << mensajesPublicitarios[posicion].getMensaje() << endl;
     cout << "El mensaje publicitario tiene categoria: " << mensajesPublicitarios[posicion].getCategoria() << endl;
 }
-
 publicidad* publicidad::cargarPublicidad(const string& rutaArchivo, int& cantidad){
     ifstream archivo(rutaArchivo);
     if(!archivo.is_open()){
@@ -100,41 +100,53 @@ publicidad* publicidad::cargarPublicidad(const string& rutaArchivo, int& cantida
         return nullptr;
     }
 
+    cout << "Cargando publicidad desde: " << rutaArchivo << "...\n";
+
     cantidad = 0;
     string linea;
-    while (getline(archivo,linea)) {
-        if (!linea.empty()){
-            cantidad ++;
+    while (getline(archivo, linea)) {
+        if (!linea.empty()) {
+            cantidad++;
         }
     }
+
     if(cantidad == 0){
+        cout << "No se encontraron mensajes publicitarios en el archivo.\n";
         archivo.close();
         return nullptr;
     }
+
     publicidad* mensajesPublicitarios = new publicidad[cantidad];
     archivo.clear();
     archivo.seekg(0);
     int i = 0;
 
-    while(getline(archivo,linea) && i < cantidad){
+    while(getline(archivo, linea) && i < cantidad){
         if (linea.empty()) continue;
 
         stringstream ss(linea);
         string categoriaStr, mensajeStr;
         try{
             getline(ss, categoriaStr, ',');
-            getline(ss, mensajeStr, ',');
+            getline(ss, mensajeStr);
 
             if(mensajeStr.empty()) throw "El mensaje publicitario esta vacio";
             char categoriaChar = categoriaStr[0];
 
             mensajesPublicitarios[i].setCategoria(categoriaChar);
             mensajesPublicitarios[i].setMensaje(mensajeStr);
+
+            // Mensaje de confirmación para cada mensaje cargado
+
+
+            i++;
         }catch(...){
             cerr << "Error al leer la linea: " << linea << endl;
         }
     }
+
     archivo.close();
+    cout << "Carga completada. Total de mensajes publicitarios: " << i << "\n";
     cantidad = i;
     return mensajesPublicitarios;
 }

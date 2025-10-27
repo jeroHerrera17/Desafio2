@@ -3,6 +3,7 @@
 #include "usuario.h"
 #include <string>
 #include "cancion.h"
+#include "publicidad.h"
 using namespace std;
 
 /**
@@ -67,7 +68,7 @@ public:
     // ==========================
     void asignarCanciones(Cancion* todas, int total); ///< Asocia canciones por ID del álbum
     void reproducirAleatorio(); ///< Reproduce una canción aleatoria del álbum
-    void reproducirAleatorioEstandar();
+    void reproducirAleatorioEstandar(publicidad* mensajesPublicitarios, int cantidadPublicidad);
     void reproducirSecuencial();
     // ==========================
     // ARCHIVOS

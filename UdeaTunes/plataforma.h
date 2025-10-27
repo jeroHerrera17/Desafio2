@@ -32,7 +32,7 @@ private:
     void menuArtistas(Usuario& usuario, bool& salir);
 
     // Menú interno para usuarios premium
-    void menuPremium(Artista* artista, Usuario& usuario, bool& salir);
+    void menuPremium(Artista* artista, bool& salir);
 
     // Menú interno para usuarios estándar
     void menuEstandar(Artista* artista, Usuario& usuario, bool& salir);

@@ -1,9 +1,10 @@
 #include "plataforma.h"
+#include "publicidad.h"
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <string>
-// Se eliminan las librerías <thread>, <chrono>, <cstdlib>
+// Se eliminan las librerias <thread>, <chrono>, <cstdlib>
 using namespace std;
 
 // ============================
@@ -190,7 +191,7 @@ void Plataforma::menuArtistas(Usuario& usuario, bool& salir) {
         if (!artistaSeleccionado) { cout << "\nNo se encontro ningun artista con ese codigo.\n"; pausar(); continue; }
 
         if (usuario.getMembresia() >= 1) { // Premium
-            menuPremium(artistaSeleccionado, usuario, salir);
+            menuPremium(artistaSeleccionado, salir);
         } else { // Estandar
             menuEstandar(artistaSeleccionado, usuario, salir);
         }
@@ -198,9 +199,9 @@ void Plataforma::menuArtistas(Usuario& usuario, bool& salir) {
 }
 
 // ============================
-// MENU PREMIUM (SALTOS DE LÍNEA CORREGIDOS)
+// MENU PREMIUM (SALTOS DE LiNEA CORREGIDOS)
 // ============================
-void Plataforma::menuPremium(Artista* artista, Usuario& usuario, bool& salir) {
+void Plataforma::menuPremium(Artista* artista,  bool& salir) {
     bool volver = false;
     while (!salir && !volver) {
         cout << "\n=============================\n";
@@ -220,11 +221,11 @@ void Plataforma::menuPremium(Artista* artista, Usuario& usuario, bool& salir) {
         for (int i = 0; i < cantAlb; i++) albumesArtista[i]->mostrarResumen();
 
         cout << "\n-----------------------------\n";
-        // OPCIONES DE NAVEGACIÓN - Corregidas con \n
+        // OPCIONES DE NAVEGACIoN - Corregidas con \n
         cout << "[I/i] Info artista\n";
         cout << "[A/a] Otro artista\n";
         cout << "[S/s] Salir\n";
-        cout << "Ingrese código del álbum: ";
+        cout << "Ingrese codigo del album: ";
         string entrada;
         cin >> entrada;
         cin.ignore(10000, '\n');
@@ -244,7 +245,7 @@ void Plataforma::menuPremium(Artista* artista, Usuario& usuario, bool& salir) {
 
         if (!albumSeleccionado) { cout << "\nNo se encontro album.\n"; pausar(); continue; }
 
-        // Menú de canciones del album premium
+        // Menu de canciones del album premium
         bool volverAlbum = false;
         while (!volverAlbum && !salir) {
             cout << "\n=============================\n";
@@ -259,12 +260,12 @@ void Plataforma::menuPremium(Artista* artista, Usuario& usuario, bool& salir) {
                 cout << i + 1 << ". " << cancionesAlbum[i]->getNombre()
                      << " (" << cancionesAlbum[i]->getDuracion() << " seg)\n";
 
-            // OPCIONES DE NAVEGACIÓN DE CANCIONES - Corregidas con \n
-            cout << "\n[R/r] Reproducir álbum\n";
-            cout << "[A/a] Volver a álbumes\n";
+            // OPCIONES DE NAVEGACIoN DE CANCIONES - Corregidas con \n
+            cout << "\n[R/r] Reproducir album\n";
+            cout << "[A/a] Volver a albumes\n";
             cout << "[T/t] Volver a artistas\n";
             cout << "[S/s] Salir\n";
-            cout << "O ingrese número de la canción: ";
+            cout << "O ingrese numero de la cancion: ";
             string opt;
             cin >> opt;
             cin.ignore(10000, '\n');
@@ -279,7 +280,7 @@ void Plataforma::menuPremium(Artista* artista, Usuario& usuario, bool& salir) {
                 cin.ignore(10000,'\n');
                 if (tipo == 1) albumSeleccionado->reproducirSecuencial();
                 else if (tipo == 2) albumSeleccionado->reproducirAleatorio();
-                else cout << "\nOpción de reproducción inválida.\n";
+                else cout << "\nOpcion de reproduccion invalida.\n";
                 pausar();
             } else {
                 try {
@@ -292,12 +293,18 @@ void Plataforma::menuPremium(Artista* artista, Usuario& usuario, bool& salir) {
         }
     }
 }
-
-// ============================
-// MENU ESTANDAR (SALTOS DE LÍNEA CORREGIDOS)
-// ============================
 void Plataforma::menuEstandar(Artista* artista, Usuario& usuario, bool& salir) {
     bool volver = false;
+    int cantidadPublicidad = 0;
+
+    // Cargar mensajes publicitarios
+    publicidad* mensajesPublicitarios = publicidad().cargarPublicidad("../../Datos/publicidad.txt", cantidadPublicidad);
+    if (!mensajesPublicitarios || cantidadPublicidad == 0) {
+        cout << "No se encontraron mensajes publicitarios. Se continuara sin publicidad.\n";
+        mensajesPublicitarios = nullptr;
+        cantidadPublicidad = 0;
+    }
+
     while (!salir && !volver) {
         cout << "\n=============================\n";
         cout << "    ARTISTA: " << artista->getNombre() << "\n";
@@ -309,23 +316,23 @@ void Plataforma::menuEstandar(Artista* artista, Usuario& usuario, bool& salir) {
         if (!albumesArtista || cantAlb == 0) {
             cout << "No hay albumes para este artista.\n";
             pausar();
-            return;
+            break;
         }
 
-        cout << "\nAlbumes disponibles:\n";
+        cout << "\nalbumes disponibles:\n";
         for (int i = 0; i < cantAlb; i++) albumesArtista[i]->mostrarResumen();
 
         cout << "\n-----------------------------\n";
-        // OPCIONES DE NAVEGACIÓN - Corregidas con \n
         cout << "[I/i] Info artista\n";
         cout << "[A/a] Otro artista\n";
         cout << "[S/s] Salir\n";
-        cout << "Ingrese código del álbum: ";
+        cout << "Ingrese codigo del album: ";
+
         string entrada;
         cin >> entrada;
         cin.ignore(10000, '\n');
 
-        if (entrada == "S" || entrada == "s") { salir = true; return; }
+        if (entrada == "S" || entrada == "s") { salir = true; break; }
         if (entrada == "I" || entrada == "i") { artista->mostrarInfo(); pausar(); continue; }
         if (entrada == "A" || entrada == "a") { volver = true; continue; }
 
@@ -340,7 +347,7 @@ void Plataforma::menuEstandar(Artista* artista, Usuario& usuario, bool& salir) {
 
         if (!albumSeleccionado) { cout << "\nNo se encontro album.\n"; pausar(); continue; }
 
-        // Menú canciones estandar
+        // Menu canciones estandar
         bool volverAlbum = false;
         while (!volverAlbum && !salir) {
             cout << "\n=============================\n";
@@ -355,21 +362,22 @@ void Plataforma::menuEstandar(Artista* artista, Usuario& usuario, bool& salir) {
                 cout << i + 1 << ". " << cancionesAlbum[i]->getNombre()
                      << " (" << cancionesAlbum[i]->getDuracion() << " seg)\n";
 
-            // OPCIONES DE NAVEGACIÓN DE CANCIONES - Corregidas con \n
             cout << "\n[R/r] Reproducir aleatorio\n";
-            cout << "[A/a] Volver a álbumes\n";
+            cout << "[A/a] Volver a albumes\n";
             cout << "[T/t] Volver a artistas\n";
             cout << "[S/s] Salir\n";
-            cout << "O ingrese número de la canción: ";
+            cout << "O ingrese numero de la cancion: ";
+
             string opt;
             cin >> opt;
             cin.ignore(10000, '\n');
 
-            if (opt == "S" || opt == "s") { salir = true; return; }
+            if (opt == "S" || opt == "s") { salir = true; break; }
             if (opt == "A" || opt == "a") break;
             if (opt == "T" || opt == "t") { volverAlbum = true; volver = true; break; }
+
             if (opt == "R" || opt == "r") {
-                albumSeleccionado->reproducirAleatorioEstandar();
+                albumSeleccionado->reproducirAleatorioEstandar(mensajesPublicitarios, cantidadPublicidad);
                 pausar();
             } else {
                 try {
@@ -381,4 +389,6 @@ void Plataforma::menuEstandar(Artista* artista, Usuario& usuario, bool& salir) {
             }
         }
     }
+
+    if (mensajesPublicitarios) delete[] mensajesPublicitarios;  // Liberar memoria si existe
 }
