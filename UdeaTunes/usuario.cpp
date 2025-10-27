@@ -20,12 +20,14 @@ Usuario::Usuario(string _nickname, string _password, string _ciudad, string _pai
         MiLista = listaFavoritos();
     else
         MiLista = _MiLista;
+    listaSeguida = nullptr;
 }
 
 Usuario::Usuario() {
     contadorPublicidad = 0;
     membresia = false;
     MiLista = listaFavoritos();
+    listaSeguida = nullptr;
 }
 
 // =====================
@@ -37,7 +39,7 @@ void Usuario::setCiudad(const string& c) { ciudad = c; }
 void Usuario::setPais(const string& p) { pais = p; }
 void Usuario::setFecha(const string& f) { fechaRegistro = f; }
 void Usuario::setPassword(const string& c) { password = c; }
-void Usuario::setListaFavoritos(const string& n, string* l, int nC) {
+void Usuario::setListaFavoritos(const string& n, Cancion** l, int nC) {
     MiLista = listaFavoritos(n, l, nC);
 }
 void Usuario::setContadorPublicidad(int CP) { contadorPublicidad = CP; }
@@ -57,6 +59,37 @@ listaFavoritos Usuario::getListaFavoritos() const {
     return MiLista;
 }
 
+/*
+ *===========================
+ * Seguir listas de favoritos
+ *===========================
+*/
+void Usuario::seguirListaFavoritos(const string& nombreDueño,Usuario* todos, int total){
+    if(listaSeguida != nullptr){
+        cout << "YA SIGUES UNA LISTA DE FAVORITOS, DEJALA DE SEGUIR PARA PODER SEGUIR OTRA LISTA" << endl;
+        return;
+    }
+    bool encontrado = false;
+    for(int i = 0; i < total; i++){
+        if(nombreDueño == todos[i].getNickname()){
+            listaSeguida = &todos[i].MiLista;
+            encontrado = true;
+            break;
+        }
+    }
+    if(encontrado == false){
+        cout << "Este usuario no existe, intente de nuevo";
+    }
+}
+
+/*
+ *====================================
+ * Dejar de seguir lista de favoritos
+ *====================================
+*/
+void Usuario::dejarDeSeguirListaFavoritos()  {listaSeguida = nullptr;}
+
+
 // =====================
 // Mostrar información
 // =====================
@@ -71,7 +104,7 @@ void Usuario::mostrarInfo() {
 // =====================
 // Cargar usuarios
 // =====================
-Usuario* Usuario::cargarUsuarios(const string& rutaArchivoU, const string& rutaArchivoLF, int& cantidad) {
+Usuario* Usuario::cargarUsuarios(const string& rutaArchivoU, const string& rutaArchivoLF, int& cantidad,Cancion* todas, int total) {
     ifstream archivo(rutaArchivoU);
     if (!archivo.is_open()) {
         cerr << "Error: no se pudo abrir el archivo " << rutaArchivoU << endl;
@@ -148,12 +181,17 @@ Usuario* Usuario::cargarUsuarios(const string& rutaArchivoU, const string& rutaA
                 sLF.clear();
                 sLF.seekg(posInicio);
 
-                string* _lista = new string[contador];
+                Cancion** _lista = new Cancion*[contador];
                 int j = 0;
                 while (getline(sLF, campo, ',') && j < contador) {
-                    _lista[j++] = campo;
+                    for(int i = 0; i < total; i++){
+                        int idCancion = todas[i].getIdAlbum();
+                        if (idCancion == stoi(campo)){
+                            _lista[j] = &todas[i];
+                            j++;
+                        }
+                    }
                 }
-
                 usuarios[i].setListaFavoritos(nicknameStr, _lista, contador);
                 delete[] _lista;
             }

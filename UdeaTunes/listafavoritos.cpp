@@ -34,6 +34,7 @@ void listaFavoritos::agregarCancion(const string& idCancion,Cancion* todas, int 
     for(int i = 0; i < numeroCanciones; i++){
         if(stoi(idCancion) == lista[i]->getIdAlbum()){
             cout << "Esta Cancion ya se encuentra en la lista ..." << endl;
+            delete[] nuevaLista;
             return;
         }
         else{
@@ -54,7 +55,31 @@ void listaFavoritos::agregarCancion(const string& idCancion,Cancion* todas, int 
 }
 
 void listaFavoritos::eliminarCancion(const string& idCancion){
-
+    int nuevoNumeroCanciones = numeroCanciones - 1;
+    bool encontrado = false;
+    Cancion** nuevaLista = new Cancion*[nuevoNumeroCanciones];
+    int j = 0;
+    for(int i = 0; i < numeroCanciones; i++){
+        if(stoi(idCancion) != lista[i]->getIdAlbum()){
+            nuevaLista[i] = lista[j];
+            j++;
+        }
+        else{
+            cout << "Cancion eliminada con exito :D" << endl;
+            encontrado = true;
+            j++;
+        }
+    }
+    if(encontrado == false){
+        cout << "la cancion no se encuentra en la lista de favoritos" << endl;
+        delete[] nuevaLista;
+        return;
+    }
+    else{
+        delete[] lista;
+        lista = nuevaLista;
+        numeroCanciones = nuevoNumeroCanciones;
+    }
 }
 
 
