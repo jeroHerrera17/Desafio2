@@ -1,0 +1,30 @@
+A,¡Disfruta del audio de 320kbps! Pásate a Premium y elimina los anuncios para siempre.
+A,Compra tu nueva camiseta de UDEA TUNES y apoya a tus artistas favoritos. ¡Encuéntrala en nuestra tienda online!
+A,¿Cansado de los saltos? Con Premium, obtén saltos ilimitados y escucha lo que quieras, cuando quieras.
+A,¡Tres meses de Premium gratis! Solo para nuevos usuarios. ¡Regístrate ahora y vive la música sin interrupciones!
+A,Descubre los podcasts exclusivos de UDEA TUNES: entrevistas, documentales y más, solo para suscriptores.
+B,Ahorra en tu factura de servicios. ¡Cámbiate hoy y obtén un 50% de descuento en el primer mes!
+B,¿Necesitas un préstamo rápido? Nuestro proceso es 100% online y la aprobación es instantánea.
+B,Mejora tu juego. La consola de última generación ya está disponible en tu tienda de electrónica más cercana.
+B,La mejor pizza de la ciudad está a solo un clic de distancia. ¡Pide ahora y recibe un descuento especial!
+B,Viaja seguro. Reserva tus billetes de tren con nuestra app y acumula puntos para futuros viajes.
+B,Invierte en tu futuro. Clases en línea sobre programación y diseño web con certificación. ¡Inscríbete!
+B,Abre tu cuenta bancaria digital sin comisiones. ¡Rápido, fácil y seguro!
+B,Dale un nuevo *look* a tu hogar. Descuentos de hasta el 40% en muebles seleccionados.
+B,Consigue un seguro de coche que se adapta a ti. Calcula tu presupuesto en menos de 5 minutos.
+B,¡Prueba gratis nuestro nuevo videojuego! Descárgalo en tu dispositivo móvil y juega en cualquier parte.
+C,Prueba la nueva bebida energética de moda. ¡Te dará el *boost* que necesitas!
+C,Visita la exposición de arte contemporáneo de esta semana. ¡Entrada libre el jueves!
+C,Aprovecha el clima. ¿Por qué no ir a dar un paseo por el parque más cercano?
+C,Descubre el nuevo *smartphone* con la cámara de más alta resolución. ¡Ya disponible!
+C,Recuerda hidratarte durante todo el día. ¡Beber agua es esencial!
+C,Organiza tus tareas con nuestra app de productividad. ¡Gratuita y fácil de usar!
+C,Busca tu nueva lectura. La librería de la esquina tiene novedades cada día.
+C,Sigue a UDEA TUNES en redes sociales para enterarte de los próximos lanzamientos musicales.
+C,Es hora de actualizar tu antivirus. ¡Mantén tus datos seguros!
+C,¡Pide un taxi de forma rápida y sencilla con nuestra aplicación!
+C,El café de la mañana es la mejor forma de empezar el día.
+C,¿Has revisado tu correo electrónico hoy? ¡Podrías tener una sorpresa!
+C,No olvides desconectar un rato. La salud mental es tan importante como la física.
+C,Regala una tarjeta de regalo de tu tienda favorita. ¡Siempre es un acierto!
+C,Aprende un idioma nuevo en solo 15 minutos al día con nuestra plataforma.

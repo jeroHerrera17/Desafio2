@@ -1,30 +1,21 @@
-1000101,10001,Luz del Amanecer,Clásica,2018-03-12,42,Orfeo Records,portada_1000101.png,9
-1000102,10001,Ecos del Silencio,Blues,2021-10-05,47,Armonía Music,portada_1000102.png,8
-
-1000201,10002,Electric Dreams,Electrónica,2019-07-20,53,Neon Sound,portada_1000201.png,9
-1000202,10002,Pulse Generator,Electrónica,2023-04-14,49,DigitalWave,portada_1000202.png,8
-
-1000301,10003,Versos del Asfalto,Hip Hop,2020-11-22,51,BeatHouse,portada_1000301.png,9
-1000302,10003,Realidad Cruda,Hip Hop,2022-08-19,46,FlowLine,portada_1000302.png,10
-
-1000401,10004,Luces del Sur,Latina,2017-02-18,39,Andes Records,portada_1000401.png,8
-1000402,10004,Son del Alma,Latina,2021-09-25,44,Sol & Ritmo,portada_1000402.png,9
-
-1000501,10005,Raíces del Sol,Reggae,2018-06-15,48,IslandWave,portada_1000501.png,10
-1000502,10005,Verde Mar,Reggae,2022-01-30,50,Roots Nation,portada_1000502.png,9
-
-1000601,10006,Historias Urbanas,Hip Hop,2019-09-03,45,BeatHouse,portada_1000601.png,8
-1000602,10006,Miradas de Noche,Hip Hop,2023-02-10,52,CityFlow,portada_1000602.png,9
-
-1000701,10007,Corazón de Acero,Rock,2020-04-22,43,MetalSoul,portada_1000701.png,8
-1000702,10007,Ecos del Fuego,Rock,2024-03-01,55,LiveStage,portada_1000702.png,9
-
-1000801,10008,Códigos en el Ritmo,Electrónica,2018-08-17,50,BitSound,portada_1000801.png,8
-1000802,10008,Dev Beats,Electrónica,2022-06-11,54,Byte Records,portada_1000802.png,9
-
-1000901,10009,Notas del Sur,Latina,2019-10-05,47,Sol & Ritmo,portada_1000901.png,9
-1000902,10009,Entre Vientos y Mar,Clásica,2023-05-27,49,Orfeo Records,portada_1000902.png,8
-
-1001001,10010,Senderos del Alma,Blues,2020-01-30,46,DeepTone,portada_1001001.png,9
-1001002,10010,Reflejos del Tiempo,Clásica,2023-07-18,51,Harmonic Soul,portada_1001002.png,8
+1000101,[Clásica, Instrumental],2018-03-12,42,Orfeo Records,portada_1000101.png,9
+1000102,[Blues, Jazz],2021-10-05,47,Armonía Music,portada_1000102.png,8
+1000201,[Electrónica, Dance],2019-07-20,53,Neon Sound,portada_1000201.png,9
+1000202,[Electrónica, Synth],2023-04-14,49,DigitalWave,portada_1000202.png,8
+1000301,[Hip Hop, Rap],2020-11-22,51,BeatHouse,portada_1000301.png,9
+1000302,[Hip Hop, Urban],2022-08-19,46,FlowLine,portada_1000302.png,10
+1000401,[Latina, Salsa],2017-02-18,39,Andes Records,portada_1000401.png,8
+1000402,[Latina, Merengue],2021-09-25,44,Sol & Ritmo,portada_1000402.png,9
+1000501,[Reggae, Ska],2018-06-15,48,IslandWave,portada_1000501.png,10
+1000502,[Reggae, Dub],2022-01-30,50,Roots Nation,portada_1000502.png,9
+1000601,[Hip Hop, Rap],2019-09-03,45,BeatHouse,portada_1000601.png,8
+1000602,[Hip Hop, Trap],2023-02-10,52,CityFlow,portada_1000602.png,9
+1000701,[Rock, Metal],2020-04-22,43,MetalSoul,portada_1000701.png,8
+1000702,[Rock, Hard Rock],2024-03-01,55,LiveStage,portada_1000702.png,9
+1000801,[Electrónica, Techno],2018-08-17,50,BitSound,portada_1000801.png,8
+1000802,[Electrónica, House],2022-06-11,54,Byte Records,portada_1000802.png,9
+1000901,[Latina, Bachata],2019-10-05,47,Sol & Ritmo,portada_1000901.png,9
+1000902,[Clásica, Orquestal],2023-05-27,49,Orfeo Records,portada_1000902.png,8
+1001001,[Blues, Soul],2020-01-30,46,DeepTone,portada_1001001.png,9
+1001002,[Clásica, Piano],2023-07-18,51,Harmonic Soul,portada_1001002.png,8
 

@@ -345,10 +345,12 @@ void Album::reproducirAleatorioEstandar() {
         cout << "======================================================\n";
         cout << "| Nombre:   " << referenciasCanciones[idx]->getNombre() << "\n";
         cout << "| Duración: " << referenciasCanciones[idx]->getDuracion() << " segundos\n";
+        cout << "| Duración: " << referenciasCanciones[idx]->getRuta128()<<endl;
         cout << "| Estado:   " << estado << "\n";
         cout << "======================================================\n";
         std::this_thread::sleep_for(std::chrono::seconds(5));
         pos++;
+        cout<<"\n\n\n\n\n";
     }
 
     cout << " Fin del álbum.\n";
