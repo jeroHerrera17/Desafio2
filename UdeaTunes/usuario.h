@@ -20,7 +20,7 @@ public:
     void setPais(const string& p);
     void setFecha(const string& f);
     void setPassword(const string& c);
-    void setListaFavoritos(const string& n, string* l, int nC);
+    void setListaFavoritos(const string& n, Cancion** l, int nC);
     void setContadorPublicidad(int CP);
 
     //getters
@@ -35,7 +35,11 @@ public:
     void mostrarInfo();
 
     //para la creacion de los arreglos dinamicos
-    static Usuario* cargarUsuarios(const string& rutaArchivoU, const string& rutaArchivoLF, int& cantidad);
+    static Usuario* cargarUsuarios(const string& rutaArchivoU, const string& rutaArchivoLF, int& cantidad, Cancion* todas, int total);
+
+    //para Seguir/ dejar de seguir la lista de favoritos de otro usuario premium
+    void seguirListaFavoritos(const string& nombreDueño,Usuario* todos, int total);
+    void dejarDeSeguirListaFavoritos();
 
 private:
     string nickname;
@@ -46,6 +50,7 @@ private:
     bool membresia;
     int contadorPublicidad;
     listaFavoritos MiLista;
+    listaFavoritos* listaSeguida;
 
 };
 
