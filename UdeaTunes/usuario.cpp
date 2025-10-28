@@ -205,3 +205,38 @@ Usuario* Usuario::cargarUsuarios(const string& rutaArchivoU, const string& rutaA
     cantidad = i;
     return usuarios;
 }
+
+
+/*
+ *=======================
+ *ACTUALIZAR ARCHIVO TXT
+ *=======================
+*/
+void actualizarArchivoTXT(const string& rutaArchivo, Usuario* usuarios, int cantidad){
+    //abrimos el archivo en modo de escritura/salida
+    ofstream archivo(rutaArchivo, ios::out);
+
+    if(!archivo.is_open()){
+        cerr << "Error: no se pudo abrir el archivo" << endl;
+        return;
+    }
+    //PASAMOS POR CADA UNO DE LOS USUARIOS Y SOBREESCRIBIMOS EL ARCHIVO TXT DE LISTA DE FAVORITOS
+    for(int i = 0; i < cantidad; i++){
+        if(usuarios[i].getMembresia() == true){
+            archivo << usuarios[i].getNickname();
+            listaFavoritos ptr = usuarios[i].getListaFavoritos();
+            Cancion** ptrLista = ptr.getLista();
+            if(ptr.getNumeroCanciones() == 0){
+                archivo << ",";
+            }
+            for(int j = 0; j < ptr.getNumeroCanciones(); j++){
+                archivo << "," << ptrLista[j]->getIdAlbum();
+            }
+            archivo << endl;
+        }
+    }
+
+    //CERRAMOS EL ARCHIVO
+    archivo.close();
+    cout << "archivo sobreescrito correctamente" << endl;
+}

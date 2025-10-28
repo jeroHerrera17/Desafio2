@@ -41,6 +41,9 @@ public:
     void seguirListaFavoritos(const string& nombreDueño,Usuario* todos, int total);
     void dejarDeSeguirListaFavoritos();
 
+    //Para actualizar los datos del archivo .txt de la lista de favoritos
+    void actualizarArchivoTXT(const string& rutaArchivo, Usuario* usuarios, int cantidad);
+
 private:
     string nickname;
     string password;
