@@ -1,6 +1,6 @@
 # UdeATunes
 
-![Estado del proyecto](https://img.shields.io/badge/Estado-Terminado-yellow)
+![Estado del proyecto](https://img.shields.io/badge/Estado-Terminado-green)
 
 ## Descripción
 
