@@ -78,6 +78,9 @@ bool Plataforma::iniciarSesion(const string& archivo, const string& nickname,
 // ============================
 // Cargar datos en memoria
 // ============================
+// ============================
+// Cargar datos en memoria (con control de memoria e iteraciones)
+// ============================
 bool Plataforma::cargarDatos(const string& rutaArtistas,
                              const string& rutaAlbumes,
                              const string& rutaCanciones,
@@ -138,7 +141,6 @@ void Plataforma::liberarMemoria() {
     if (artistas) { delete[] artistas; artistas = nullptr; }
     if (albumes)  { delete[] albumes;  albumes  = nullptr; }
     if (canciones){ delete[] canciones; canciones = nullptr; }
-    if (listasFavoritos) { delete[] listasFavoritos; listasFavoritos = nullptr; }
 }
 
 // ============================
@@ -176,11 +178,15 @@ void Plataforma::ejecutar(const Usuario& usuario) {
 // ============================
 // MENU PREMIUM
 // ============================
+
+// ============================
+// MENU PREMIUM
+// ============================
 void Plataforma::menuPremium(Usuario& usuario, bool& salir) {
     while (!salir) {
 
         for(int i = 0; i++; )
-        cout << "\n=============================\n";
+            cout << "\n=============================\n";
         cout << "         UDEA TUNES\n";
         cout << "=============================\n";
         cout << "Usuario: " << usuario.getNickname() << " (Premium)\n";
@@ -280,6 +286,7 @@ void Plataforma::menuListaFavoritos(Usuario& usuario, bool& salir){
         return;
     }
 }
+
 
 // ============================
 // MENU ÁLBUMES PREMIUM

@@ -2,7 +2,6 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <cctype>
 using namespace std;
 
 Creditos::Creditos() {
@@ -68,57 +67,73 @@ Creditos::~Creditos() {
 }
 
 void Creditos::mostrar() const {
-    cout << "\n\t[Creditos]" << endl;
+    cout << "\n[Creditos]" << endl;
 
-    cout << "\tProductores:" << endl;
-    for (int i = 0; i < nProductores; i++) cout << "\t  - " << productores[i] << endl;
+    cout << "Productores:" << endl;
+    for (int i = 0; i < nProductores; i++)
+        cout << "  - " << productores[i] << endl;
 
-    cout << "\tMusicos:" << endl;
-    for (int i = 0; i < nMusicos; i++) cout << "\t  - " << musicos[i] << endl;
+    cout << "Musicos:" << endl;
+    for (int i = 0; i < nMusicos; i++)
+        cout << "  - " << musicos[i] << endl;
 
-    cout << "\tCompositores:" << endl;
-    for (int i = 0; i < nCompositores; i++) cout << "\t  - " << compositores[i] << endl;
+    cout << "Compositores:" << endl;
+    for (int i = 0; i < nCompositores; i++)
+        cout << "  - " << compositores[i] << endl;
 }
 
 // ------------------------------------------------------------
-//  Carga los créditos desde el archivo fijo "../../Datos/creditosCanciones.txt"
+// Carga los creditos desde el archivo fijo "../../Datos/creditosCanciones.txt"
 // Formato esperado:
-// idCancion,Productores:Ana-Pérez-AB1234CD56|Carlos-Ríos-ZX9876YU43;Musicos:...;Compositores:...
+// idCancion,Productores:Ana-Perez-AB1234|Carlos-Rios-ZX9876;Musicos:...;Compositores:...
 // ------------------------------------------------------------
 Creditos Creditos::desdeArchivo(long idCancion) {
+    // variables de monitoreo de recursos
+    size_t memoriaUsada = 0;
+    int iteraciones = 0;
+
     Creditos resultado;
     ifstream file("../../Datos/creditosCanciones.txt");
     if (!file.is_open()) {
-        cerr << "Error: no se pudo abrir el archivo de créditos." << endl;
+        cerr << "Error: no se pudo abrir el archivo de creditos." << endl;
         return resultado;
     }
 
     string linea;
     while (getline(file, linea)) {
+        iteraciones++;
         if (linea.empty()) continue;
 
         stringstream ss(linea);
         string idStr;
         getline(ss, idStr, ',');
         long id = stol(idStr);
-
         if (id != idCancion) continue;
 
-        // --- Se encontró la línea correspondiente ---
         string resto;
         getline(ss, resto);
 
-        // arreglos temporales
         string prodTemp[20], musTemp[20], compTemp[20];
         int nP = 0, nM = 0, nC = 0;
 
         stringstream partes(resto);
         string seccion;
 
+        // funcion para recortar espacios
         auto trim = [](string s) {
-            size_t start = s.find_first_not_of(" \t");
-            size_t end = s.find_last_not_of(" \t");
-            return (start == string::npos) ? string("") : s.substr(start, end - start + 1);
+            size_t start = 0;
+            size_t end = s.size();
+            while (start < end && (s[start] == ' ' || s[start] == '\t')) start++;
+            while (end > start && (s[end - 1] == ' ' || s[end - 1] == '\t')) end--;
+            return s.substr(start, end - start);
+        };
+
+        // funcion para pasar a minusculas sin usar <cctype>
+        auto toLowerString = [](string s) {
+            for (char& c : s) {
+                if (c >= 'A' && c <= 'Z') c = c - 'A' + 'a';
+            }
+            return s;
         };
 
         while (getline(partes, seccion, ';')) {
@@ -128,17 +143,15 @@ Creditos Creditos::desdeArchivo(long idCancion) {
 
             string rol = trim(seccion.substr(0, pos));
             string datos = trim(seccion.substr(pos + 1));
-
-            // normalizar rol
-            for (auto& c : rol) c = tolower((unsigned char)c);
+            rol = toLowerString(rol);
 
             stringstream nombres(datos);
             string persona;
+
             while (getline(nombres, persona, '|')) {
                 persona = trim(persona);
                 if (persona.empty()) continue;
 
-                // cada persona se define como Nombre-Apellido-Codigo
                 stringstream campos(persona);
                 string nombre, apellido, codigo;
                 getline(campos, nombre, '-');
@@ -146,12 +159,15 @@ Creditos Creditos::desdeArchivo(long idCancion) {
                 getline(campos, codigo, '-');
 
                 string textoFinal = nombre + " " + apellido + " (" + codigo + ")";
+
                 if (rol == "productores" && nP < 20)
                     prodTemp[nP++] = textoFinal;
                 else if (rol == "musicos" && nM < 20)
                     musTemp[nM++] = textoFinal;
                 else if (rol == "compositores" && nC < 20)
                     compTemp[nC++] = textoFinal;
+
+                memoriaUsada += textoFinal.size();
             }
         }
 
@@ -160,5 +176,12 @@ Creditos Creditos::desdeArchivo(long idCancion) {
     }
 
     file.close();
+
+    // mostrar resumen de recursos al final
+    cout << "Creditos cargados correctamente." << endl;
+    cout << "Uso de recursos en Creditos::desdeArchivo:" << endl;
+    cout << "  - Memoria usada: " << memoriaUsada << " bytes aprox." << endl;
+    cout << "  - Iteraciones realizadas: " << iteraciones << endl;
+
     return resultado;
 }
