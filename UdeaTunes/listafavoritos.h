@@ -13,6 +13,9 @@ public:
     listaFavoritos();
     ~listaFavoritos();
 
+    //Cargar las listas de favoritos
+    static listaFavoritos* cargarTodos(const string& rutaArchivo, int& cantidad, Cancion* todasCanciones, int totalCanciones);
+
     //REPRODUCTOR.
     void reproducirListaFavoritos();
 

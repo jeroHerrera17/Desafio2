@@ -6,6 +6,7 @@
 #include "album.h"
 #include "cancion.h"
 #include "usuario.h"
+#include "listafavoritos.h"
 
 using namespace std;
 
@@ -18,16 +19,20 @@ private:
     Artista* artistas;
     Album* albumes;
     Cancion* canciones;
+    listaFavoritos* listasFavoritos;
 
     int cantArtistas;
     int cantAlbumes;
     int cantCanciones;
+    int cantListasFavoritos;
+
 
     // Métodos privados auxiliares
     void pausar();
 
     // Métodos privados de navegación - PREMIUM
     void menuPremium(Usuario& usuario, bool& salir);
+    void menuListaFavoritos(Usuario& usuario, bool& salir);
     void menuAlbumesPremium(Artista* artista, bool& volver, bool& salir);
     void menuCancionesPremium(Album* album, Artista* artista, bool& volverAlbum, bool& volverArtistas, bool& salir);
 
@@ -45,7 +50,7 @@ public:
     bool iniciarSesion(const string& archivo, const string& nickname,
                        const string& clave, Usuario& usuario);
     bool cargarDatos(const string& rutaArtistas, const string& rutaAlbumes,
-                     const string& rutaCanciones);
+                     const string& rutaCanciones, const string& rutaListaFavoritos);
     void ejecutar(const Usuario& usuario);
     void liberarMemoria();
 

@@ -48,8 +48,7 @@ void listaFavoritos::agregarCancion(const string& idCancion,Cancion* todas, int 
             break;
         }
     }
-    delete[] lista;
-
+    lista = nullptr;
     lista = nuevaLista;
     numeroCanciones = nuevoNumeroCanciones;
 }
@@ -192,12 +191,16 @@ void listaFavoritos::reproducirListaFavoritos(){
 
         //REPRODUCCION SI TIENE MENOS DE 7 CANCIONES
         if(numeroCanciones < 7){
-            int* posiciones = new int[numeroCanciones];
-            for(int i=0; i<numeroCanciones; i++){
-                posiciones[i] = rand() % numeroCanciones;
+            int* indices = new int[numeroCanciones];
+            for (int i = 0; i < numeroCanciones; i++) indices[i] = i;
+
+            srand(time(nullptr));
+            for (int i = numeroCanciones - 1; i > 0; i--) {
+                int j = rand() % (i + 1);
+                swap(indices[i], indices[j]);
             }
             while(posCancion < numeroCanciones){
-                lista[posiciones[posCancion]] ->mostrarInfo();
+                lista[indices[posCancion]] ->mostrarInfo();
                 this_thread::sleep_for(chrono::seconds(3));
 
                 //Siguiente accion
@@ -227,17 +230,21 @@ void listaFavoritos::reproducirListaFavoritos(){
                 }
                 cout << endl << endl;
             }
-            delete[] posiciones;
+            delete[] indices;
         }
 
         //REPRODUCCION SI TIENE 7 o MAS CANCIONES EN LA LISTA
         else{
-            int posiciones[7];
-            for(int i=0; i<7; i++){
-                posiciones[i] = rand() % numeroCanciones;
+            int indices[7];
+            for (int i = 0; i < 7; i++) indices[i] = i;
+
+            srand(time(nullptr));
+            for (int i = 7 - 1; i > 0; i--) {
+                int j = rand() % (i + 1);
+                swap(indices[i], indices[j]);
             }
             while(posCancion < numeroCanciones){
-                lista[posiciones[posCancion]] ->mostrarInfo();
+                lista[indices[posCancion]] ->mostrarInfo();
                 this_thread::sleep_for(chrono::seconds(3));
 
                 //Siguiente accion
@@ -296,4 +303,67 @@ string listaFavoritos::getNombreDueño() const {
 
 int listaFavoritos::getNumeroCanciones() const {
     return numeroCanciones;
+}
+
+
+//Cargar las listas de favoritos
+listaFavoritos* listaFavoritos::cargarTodos(const string& rutaArchivo, int& cantidad, Cancion* todasCanciones, int totalCanciones){
+    ifstream file(rutaArchivo);
+    if (!file.is_open()) {
+        cerr << "Error al abrir el archivo de álbumes: " << rutaArchivo << endl;
+        cantidad = 0;
+        return nullptr;
+    }
+
+    cantidad = 0;
+    string linea;
+    while (getline(file, linea)) {
+        if (!linea.empty()) cantidad++;
+    }
+
+    if (cantidad == 0) {
+        file.close();
+        return nullptr;
+    }
+
+    // Crear array dinámico
+    listaFavoritos* listasFavoritos = new listaFavoritos[cantidad];
+    file.clear();
+    file.seekg(0);
+    int i = 0;
+
+    while (getline(file, linea) && i < cantidad) {
+        stringstream ss(linea);
+        string campo, nombre;
+        getline(ss, nombre, ',');
+
+        // Contar canciones
+        int contador = 0;
+        streampos posInicio = ss.tellg();
+        while (getline(ss, campo, ',')) contador++;
+
+        if (contador > 0) {
+            // Volver al inicio de las canciones
+            ss.clear();
+            ss.seekg(posInicio);
+
+            Cancion** _lista = new Cancion*[contador];
+            int j = 0;
+            while (getline(ss, campo, ',') && j < contador) {
+                for(int i = 0; i < totalCanciones; i++){
+                    int idCancion = todasCanciones[i].getIdAlbum();
+                    if (idCancion == stoi(campo)){
+                        _lista[j] = &todasCanciones[i];
+                        j++;
+                        break;
+                    }
+                }
+            }
+            listasFavoritos[i] = listaFavoritos(nombre, _lista, contador);
+        }
+        i++;
+    }
+    file.close();
+    cantidad = i;
+    return listasFavoritos;
 }

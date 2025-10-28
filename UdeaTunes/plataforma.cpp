@@ -80,7 +80,8 @@ bool Plataforma::iniciarSesion(const string& archivo, const string& nickname,
 // ============================
 bool Plataforma::cargarDatos(const string& rutaArtistas,
                              const string& rutaAlbumes,
-                             const string& rutaCanciones) {
+                             const string& rutaCanciones,
+                             const string& rutaListaFavoritos) {
     cout << "\n=============================\n";
     cout << "    CARGANDO DATOS...\n";
     cout << "=============================\n";
@@ -106,9 +107,17 @@ bool Plataforma::cargarDatos(const string& rutaArtistas,
         return false;
     }
 
+    listasFavoritos = listaFavoritos::cargarTodos(rutaListaFavoritos, cantListasFavoritos, canciones, cantCanciones);
+    if (!listasFavoritos) {
+        cerr << "Error: no se pudieron cargar los albumes.\n";
+        liberarMemoria();
+        return false;
+    }
+
     cout << "Artistas cargados: " << cantArtistas << endl;
     cout << "Albumes cargados: " << cantAlbumes << endl;
     cout << "Canciones totales: " << cantCanciones << endl;
+    cout << "usuarios con listas de favoritos totales: " << cantListasFavoritos << endl;
 
     return true;
 }
@@ -129,6 +138,7 @@ void Plataforma::liberarMemoria() {
     if (artistas) { delete[] artistas; artistas = nullptr; }
     if (albumes)  { delete[] albumes;  albumes  = nullptr; }
     if (canciones){ delete[] canciones; canciones = nullptr; }
+    if (listasFavoritos) { delete[] listasFavoritos; listasFavoritos = nullptr; }
 }
 
 // ============================
@@ -168,6 +178,8 @@ void Plataforma::ejecutar(const Usuario& usuario) {
 // ============================
 void Plataforma::menuPremium(Usuario& usuario, bool& salir) {
     while (!salir) {
+
+        for(int i = 0; i++; )
         cout << "\n=============================\n";
         cout << "         UDEA TUNES\n";
         cout << "=============================\n";
@@ -182,6 +194,7 @@ void Plataforma::menuPremium(Usuario& usuario, bool& salir) {
 
         cout << "\n-----------------------------\n";
         cout << " Ingrese código del artista\n";
+        cout << " [R/r] si deseas acceder al menu de tu lista de favoritos\n";
         cout << " [S/s] Salir\n";
         cout << "-----------------------------\n";
         cout << "Opción: ";
@@ -191,6 +204,11 @@ void Plataforma::menuPremium(Usuario& usuario, bool& salir) {
         cin.ignore(10000, '\n');
 
         if (entrada == "S" || entrada == "s") { salir = true; return; }
+
+        else if(entrada == "R" || entrada == "r"){
+            Plataforma::menuListaFavoritos(usuario, salir);
+        }
+
 
         int codigoArtista;
         try { codigoArtista = stoi(entrada); }
@@ -207,6 +225,59 @@ void Plataforma::menuPremium(Usuario& usuario, bool& salir) {
         while (!salir && !volver) {
             menuAlbumesPremium(artistaSeleccionado, volver, salir);
         }
+    }
+}
+
+//============================
+//MENU LISTA FAVORITOS
+//============================
+void Plataforma::menuListaFavoritos(Usuario& usuario, bool& salir){
+    string entrada;
+    listaFavoritos* ptr;
+    for(int i = 0; i < cantListasFavoritos; i++){
+        if(usuario.getNickname() == listasFavoritos[i].getNombreDueño()){
+            ptr = &listasFavoritos[i];
+        }
+    }
+    cout << "\n\n\n\n=============================\n";
+    cout << "      MENU LISTA DE FAVORITOS\n";
+    cout << "=============================\n";
+    cout << "Usuario: " << usuario.getNickname() << " (Premium)\n";
+    cout << "=============================\n";
+    cout << "     LISTA DE ACCIONES\n";
+    cout << "=============================\n\n";
+
+    cout << "\n-----------------------------\n";
+    cout << " Ingrese la accion que desea realizar\n";
+    cout << " [R/r] Reproducir lista de favoritos\n";
+    cout << " [A/a] agregar cancion a la lista de favoritos\n";
+    cout << " [E/e] eliminar cancion de la lista de favoritos\n";
+    cout << " [S/s] Salir\n";
+    cout << "-----------------------------\n";
+    cout << "Opción: ";
+
+    cin >> entrada;
+    if(entrada ==  "R" || entrada == "r"){
+        cout << "\n\n\n\n";
+        ptr->reproducirListaFavoritos();
+    }
+    else if(entrada == "A" || entrada == "a"){
+        cout << "\n\n\n\n";
+        string IdCancion;
+        cout << "Ingresa el codigo de la cancion que deseeas agregar: ";
+        cin >> IdCancion;
+        ptr->agregarCancion(IdCancion, canciones, cantCanciones);
+    }
+    else if(entrada == "E" || entrada == "e"){
+        cout << "\n\n\n\n";
+        string IdCancion;
+        cout << "Ingresa el codigo de la cancion que deseeas eliminar: ";
+        cin >> IdCancion;
+        ptr->eliminarCancion(IdCancion);
+    }
+    else if(entrada == "S" || entrada == "s"){
+        salir = true;
+        return;
     }
 }
 
