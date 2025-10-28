@@ -27,6 +27,7 @@ int main() {
     string rutaArtistas = "../../Datos/artistas.txt";
     string rutaAlbumes  = "../../Datos/albumes.txt";
     string rutaCanciones = "../../Datos/canciones.txt";
+    string rutaListaFavoritos = "../../Datos/listaFavoritos.txt";
 
     if (!plataforma.iniciarSesion(rutaUsuarios, nickname, clave, usuario)) {
         cout << "\nNo se pudo iniciar sesion. Verifica tus datos.\n";
@@ -39,7 +40,7 @@ int main() {
     // ========================================
     // 3. CARGAR DATOS EN MEMORIA
     // ========================================
-    if (!plataforma.cargarDatos(rutaArtistas, rutaAlbumes, rutaCanciones)) {
+    if (!plataforma.cargarDatos(rutaArtistas, rutaAlbumes, rutaCanciones, rutaListaFavoritos)) {
         cout << "\nError al cargar los datos.\n";
         return 1;
     }
